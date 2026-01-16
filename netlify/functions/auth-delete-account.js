@@ -5,6 +5,13 @@
  */
 const { supabase } = require('./utils/db');
 const { verifyToken, jsonResponse, handleCors, extractToken } = require('./utils/auth');
+const { createClient } = require('@supabase/supabase-js');
+
+// Initialize Supabase client for verifying OAuth tokens
+const supabaseAuth = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 exports.handler = async (event) => {
   // Handle CORS
@@ -25,12 +32,27 @@ exports.handler = async (event) => {
       return jsonResponse(401, { success: false, error: 'Authentication required' });
     }
 
+    // Try our JWT token first
+    let userId = null;
     const decoded = verifyToken(token);
-    if (!decoded) {
-      return jsonResponse(401, { success: false, error: 'Invalid or expired token' });
+
+    if (decoded) {
+      userId = decoded.id;
+    } else {
+      // Try Supabase token (for Google OAuth users)
+      try {
+        const { data: { user }, error } = await supabaseAuth.auth.getUser(token);
+        if (user && !error) {
+          userId = user.id;
+        }
+      } catch (supabaseErr) {
+        console.error('Supabase token verification failed:', supabaseErr);
+      }
     }
 
-    const userId = decoded.id;
+    if (!userId) {
+      return jsonResponse(401, { success: false, error: 'Invalid or expired token' });
+    }
 
     // Delete user's bookings (as renter)
     await supabase
