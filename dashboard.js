@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Redirect renters to renter dashboard
+    // Redirect pure renters to renter dashboard (allow 'owner', 'both', and 'admin' roles here)
     if (user && user.role === 'renter') {
         window.location.href = 'renter-dashboard.html';
         return;

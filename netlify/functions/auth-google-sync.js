@@ -61,7 +61,7 @@ exports.handler = async (event) => {
         password_hash: 'GOOGLE_OAUTH', // Marker for OAuth users
         first_name: firstName || email.split('@')[0],
         last_name: lastName || '',
-        role: 'renter',
+        role: 'both', // Allow access to both owner and renter dashboards
         status: 'active',
         is_admin: false,
         avatar_url: avatarUrl,

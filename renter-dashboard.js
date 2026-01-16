@@ -4,7 +4,7 @@
 
 // Conditional logging - only in development
 const log = CONFIG?.IS_PRODUCTION === false ? console.log.bind(console) : () => {};
-const logError = CONFIG?.IS_PRODUCTION === false ? logError.bind(console) : () => {};
+const logError = CONFIG?.IS_PRODUCTION === false ? console.error.bind(console) : () => {};
 
 // Check auth on load
 document.addEventListener('DOMContentLoaded', async function() {

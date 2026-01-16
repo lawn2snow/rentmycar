@@ -301,7 +301,9 @@ async function handleSignUp(e) {
 
 // Redirect to appropriate dashboard based on role
 function redirectToDashboard(user) {
-    if (user.role === 'owner' || user.role === 'both') {
+    if (user.isAdmin || user.role === 'admin') {
+        window.location.href = 'admin.html';
+    } else if (user.role === 'owner' || user.role === 'both') {
         window.location.href = 'dashboard.html';
     } else {
         window.location.href = 'renter-dashboard.html';
@@ -473,7 +475,7 @@ async function handleOAuthCallback() {
                     email: googleUser.email,
                     firstName: googleUser.user_metadata?.full_name?.split(' ')[0] || googleUser.email.split('@')[0],
                     lastName: googleUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
-                    role: 'renter',
+                    role: 'both', // Allow access to both owner and renter dashboards
                     isAdmin: false,
                     avatarUrl: googleUser.user_metadata?.avatar_url || null
                 };
