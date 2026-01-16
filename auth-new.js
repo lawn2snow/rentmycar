@@ -435,7 +435,10 @@ async function socialAuth(provider) {
         const { data, error } = await client.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin
+                redirectTo: window.location.origin,
+                queryParams: {
+                    prompt: 'select_account' // Always show account picker
+                }
             }
         });
 
@@ -529,6 +532,60 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Export functions for use in other scripts
+// Delete account function
+async function deleteAccount() {
+    const confirmed = confirm(
+        '⚠️ DELETE ACCOUNT\n\n' +
+        'This will permanently delete:\n' +
+        '• Your profile and personal data\n' +
+        '• All your listed cars\n' +
+        '• All your bookings\n' +
+        '• All your reviews\n\n' +
+        'This action CANNOT be undone!\n\n' +
+        'Are you sure you want to delete your account?'
+    );
+
+    if (!confirmed) return;
+
+    // Double confirm
+    const doubleConfirm = confirm('This is your LAST CHANCE!\n\nClick OK to permanently delete your account.');
+    if (!doubleConfirm) return;
+
+    try {
+        showToast('Deleting account...', 'info');
+
+        const token = localStorage.getItem(CONFIG.STORAGE_KEYS.SESSION_TOKEN);
+        const response = await fetch(CONFIG.API_URL + '/auth-delete-account', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Clear all local storage
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.SESSION_TOKEN);
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.USER);
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.REFRESH_TOKEN);
+
+            showToast('Account deleted successfully', 'success');
+
+            // Redirect to home after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        } else {
+            showToast(result.error || 'Failed to delete account', 'error');
+        }
+    } catch (error) {
+        console.error('Delete account error:', error);
+        showToast('Failed to delete account. Please try again.', 'error');
+    }
+}
+
 window.isAuthenticated = isAuthenticated;
 window.getCurrentUser = getCurrentUser;
 window.requireAuth = requireAuth;
@@ -540,3 +597,4 @@ window.logout = logout;
 window.showToast = showToast;
 window.redirectToDashboard = redirectToDashboard;
 window.socialAuth = socialAuth;
+window.deleteAccount = deleteAccount;

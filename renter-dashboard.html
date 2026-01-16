@@ -236,6 +236,14 @@
                     <input type="tel" id="settingsPhone">
                 </div>
                 <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+
+                <div class="danger-zone" style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #fee;">
+                    <h4 style="color: #dc3545; margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Permanently delete your account and all associated data. This action cannot be undone.</p>
+                    <button class="btn btn-danger" onclick="deleteAccount()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; cursor: pointer;">
+                        <i class="fas fa-trash-alt"></i> Delete My Account
+                    </button>
+                </div>
             </div>
         </section>
     </main>
