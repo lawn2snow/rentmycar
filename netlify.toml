@@ -1,8 +1,8 @@
 # Netlify Configuration for RentMyCar
 
 [build]
-  # Install function dependencies
-  command = "echo Dependencies installed"
+  # Install function dependencies on Netlify servers
+  command = "cd netlify/functions && npm install"
   # Publish root directory (static site)
   publish = "."
   # Functions directory
