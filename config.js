@@ -5,10 +5,6 @@
 
 // Detect environment (works with Vite build or standalone)
 const getEnvVar = (key, defaultValue) => {
-  // Check for Vite environment variables
-  if (typeof import.meta !== 'undefined' && import.meta.env) {
-    return import.meta.env[key] || defaultValue;
-  }
   // Check for window config (can be set by deployment)
   if (typeof window !== 'undefined' && window.__ENV__) {
     return window.__ENV__[key] || defaultValue;
