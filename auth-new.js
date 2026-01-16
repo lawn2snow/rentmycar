@@ -405,10 +405,116 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Social auth placeholder
-function socialAuth(provider) {
-    showToast(`${provider} authentication coming soon`, 'info');
+// Social authentication with Supabase
+async function socialAuth(provider) {
+    if (!window.supabaseClient) {
+        showToast('Authentication service not available', 'error');
+        return;
+    }
+
+    if (provider !== 'google') {
+        showToast(`${provider} authentication coming soon`, 'info');
+        return;
+    }
+
+    try {
+        showToast('Redirecting to Google...', 'info');
+
+        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin + '/?auth=callback'
+            }
+        });
+
+        if (error) {
+            console.error('Google auth error:', error);
+            showToast('Failed to connect to Google', 'error');
+        }
+    } catch (err) {
+        console.error('Social auth error:', err);
+        showToast('Authentication failed', 'error');
+    }
 }
+
+// Handle OAuth callback
+async function handleOAuthCallback() {
+    if (!window.supabaseClient) return;
+
+    // Check if this is an auth callback
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+
+    if (urlParams.get('auth') === 'callback' || hashParams.get('access_token')) {
+        try {
+            const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+
+            if (error) {
+                console.error('OAuth callback error:', error);
+                showToast('Sign in failed', 'error');
+                return;
+            }
+
+            if (session && session.user) {
+                // Get or create user in our database
+                const googleUser = session.user;
+                const userData = {
+                    id: googleUser.id,
+                    email: googleUser.email,
+                    firstName: googleUser.user_metadata?.full_name?.split(' ')[0] || googleUser.email.split('@')[0],
+                    lastName: googleUser.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+                    role: 'renter',
+                    isAdmin: false,
+                    avatarUrl: googleUser.user_metadata?.avatar_url || null
+                };
+
+                // Store user data
+                localStorage.setItem(CONFIG.STORAGE_KEYS.SESSION_TOKEN, session.access_token);
+                localStorage.setItem(CONFIG.STORAGE_KEYS.USER, JSON.stringify(userData));
+
+                // Clean up URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                // Update UI
+                showUserMenu(userData);
+                closeAuthModal();
+                showToast(`Welcome, ${userData.firstName}!`, 'success');
+
+                // Sync user to our database
+                syncGoogleUser(userData, session.access_token);
+            }
+        } catch (err) {
+            console.error('OAuth callback processing error:', err);
+        }
+    }
+}
+
+// Sync Google user to our backend database
+async function syncGoogleUser(userData, accessToken) {
+    try {
+        const response = await fetch(CONFIG.API_URL + '/auth-google-sync', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: userData.id,
+                email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                avatarUrl: userData.avatarUrl
+            })
+        });
+        // Silent sync - don't show errors to user
+    } catch (err) {
+        console.error('User sync error:', err);
+    }
+}
+
+// Initialize OAuth callback handler on page load
+document.addEventListener('DOMContentLoaded', function() {
+    handleOAuthCallback();
+});
 
 // Export functions for use in other scripts
 window.isAuthenticated = isAuthenticated;

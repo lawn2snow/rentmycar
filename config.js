@@ -119,3 +119,12 @@ if (CONFIG.IS_PRODUCTION) {
     console.error('CONFIG ERROR: STRIPE_PUBLISHABLE_KEY is not configured');
   }
 }
+
+// Initialize Supabase client for frontend auth (Google OAuth, etc.)
+let supabaseClient = null;
+if (typeof window !== 'undefined' && typeof supabase !== 'undefined') {
+  supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+}
+
+// Export supabase client
+window.supabaseClient = supabaseClient;
