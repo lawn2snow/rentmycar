@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 20px 15px;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .notification-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            position: relative;
+        }
+        
+        .earnings-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 15px;
+        }
+        
+        .earnings-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .earnings-amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .earnings-change {
+            font-size: 14px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 15px;
+            padding-bottom: 70px;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .action-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .action-label {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .see-all {
+            color: #6366f1;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* Rental Cards */
+        .rental-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+        
+        .rental-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .car-image {
+            width: 60px;
+            height: 45px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .rental-info {
+            flex: 1;
+        }
+        
+        .car-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .renter-name {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .rental-status {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-upcoming {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .rental-details {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .detail-item {
+            text-align: center;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .detail-label {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 10px;
+        }
+        
+        .nav-item.active {
+            color: #6366f1;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+        
+        /* Simple Chart */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100px;
+            gap: 5px;
+        }
+        
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, #6366f1, #8b5cf6);
+            border-radius: 4px 4px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-top">
+            <h1>Dashboard</h1>
+            <button class="notification-btn">🔔</button>
+        </div>
+        
+        <div class="earnings-card">
+            <div class="earnings-label">Total Earnings</div>
+            <div class="earnings-amount">$12,450</div>
+            <div class="earnings-change">📈 +15% from last month</div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🚗</div>
+                <div class="stat-value">3</div>
+                <div class="stat-label">Active Cars</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-value">12</div>
+                <div class="stat-label">Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">4.9</div>
+                <div class="stat-label">Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value">$450</div>
+                <div class="stat-label">Today</div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-btn">
+                <div class="action-icon">➕</div>
+                <div class="action-label">Add Car</div>
+            </button>
+            <button class="action-btn">
+                <div class="action-icon">📅</div>
+                <div class="action-label">Calendar</div>
+            </button>
+            <button class="action-btn">
+                <div class="action-icon">💵</div>
+                <div class="action-label">Payouts</div>
+            </button>
+            <button class="action-btn">
+                <div class="action-icon">💬</div>
+                <div class="action-label">Messages</div>
+            </button>
+        </div>
+        
+        <!-- Chart -->
+        <div class="chart-container">
+            <div class="chart-header">
+                <span class="chart-title">Weekly Revenue</span>
+            </div>
+            <div class="chart-bars">
+                <div class="bar" style="height: 60%"></div>
+                <div class="bar" style="height: 80%"></div>
+                <div class="bar" style="height: 45%"></div>
+                <div class="bar" style="height: 90%"></div>
+                <div class="bar" style="height: 70%"></div>
+                <div class="bar" style="height: 100%"></div>
+                <div class="bar" style="height: 85%"></div>
+            </div>
+        </div>
+        
+        <!-- Active Rentals -->
+        <div class="section-header">
+            <h2 class="section-title">Active Rentals</h2>
+            <a href="#" class="see-all">See all</a>
+        </div>
+        
+        <div class="rental-card">
+            <div class="rental-header">
+                <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=100" class="car-image">
+                <div class="rental-info">
+                    <div class="car-name">Tesla Model 3</div>
+                    <div class="renter-name">Sarah Mitchell</div>
+                </div>
+                <span class="rental-status status-active">Active</span>
+            </div>
+            <div class="rental-details">
+                <div class="detail-item">
+                    <div class="detail-value">2h 15m</div>
+                    <div class="detail-label">Time Left</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">$120</div>
+                    <div class="detail-label">Earnings</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">25 mi</div>
+                    <div class="detail-label">Distance</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="rental-card">
+            <div class="rental-header">
+                <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=100" class="car-image">
+                <div class="rental-info">
+                    <div class="car-name">BMW X5</div>
+                    <div class="renter-name">John Davis</div>
+                </div>
+                <span class="rental-status status-upcoming">Tomorrow</span>
+            </div>
+            <div class="rental-details">
+                <div class="detail-item">
+                    <div class="detail-value">3 days</div>
+                    <div class="detail-label">Duration</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">$450</div>
+                    <div class="detail-label">Total</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">10 AM</div>
+                    <div class="detail-label">Pickup</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-item active">
+            <span class="nav-icon">📊</span>
+            <span>Overview</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">🚗</span>
+            <span>Fleet</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">📅</span>
+            <span>Bookings</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">💰</span>
+            <span>Earnings</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </button>
+    </div>
+    
+    <script>
+        // Simple navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Quick actions
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Feature coming soon!');
+            });
+        });
+    </script>
+</body>
+</html>

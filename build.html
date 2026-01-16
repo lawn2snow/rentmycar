@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentMyCar - Build Progress & Testing Guide</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #94a3b8;
+        }
+
+        .tab:hover, .tab.active {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+            color: #fff;
+        }
+
+        .tab i {
+            margin-right: 0.5rem;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card h2 i {
+            color: #6366f1;
+        }
+
+        .card h3 {
+            color: #e2e8f0;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        /* Progress Section */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .progress-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .progress-card h4 {
+            color: #fff;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-fill.complete { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        .progress-fill.in-progress { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .progress-fill.pending { background: linear-gradient(90deg, #6366f1, #4f46e5); }
+
+        .progress-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Status Badges */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status.complete {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .status.in-progress {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .status.pending {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.65rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6366f1;
+            border: 2px solid #1e1e2e;
+        }
+
+        .timeline-item.complete::before {
+            background: #22c55e;
+        }
+
+        .timeline-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-title {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-desc {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        td {
+            color: #cbd5e1;
+        }
+
+        /* Code blocks */
+        code {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+        }
+
+        /* Links */
+        a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .checklist li i {
+            color: #22c55e;
+        }
+
+        /* Quick Links Grid */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .link-card {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .link-card:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .link-card i {
+            font-size: 2rem;
+            color: #6366f1;
+            margin-bottom: 0.75rem;
+        }
+
+        .link-card h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .link-card p {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .link-card a {
+            display: inline-block;
+            background: #6366f1;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: background 0.3s;
+        }
+
+        .link-card a:hover {
+            background: #4f46e5;
+            text-decoration: none;
+        }
+
+        /* Credentials Box */
+        .credentials-box {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .credentials-box h4 {
+            color: #4ade80;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .credential-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .credential-item label {
+            color: #94a3b8;
+            min-width: 80px;
+        }
+
+        .credential-item code {
+            background: rgba(0,0,0,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+
+        /* Overall Progress */
+        .overall-progress {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .overall-progress h2 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .big-percentage {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .overall-progress p {
+            color: #94a3b8;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 3rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-car"></i> RentMyCar</h1>
+            <p>Build Progress & Client Testing Portal</p>
+            <span class="version-badge"><i class="fas fa-code-branch"></i> Version 1.0.0 - Production</span>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="showSection('progress')">
+                <i class="fas fa-tasks"></i> Build Progress
+            </div>
+            <div class="tab" onclick="showSection('links')">
+                <i class="fas fa-link"></i> Quick Links
+            </div>
+            <div class="tab" onclick="showSection('credentials')">
+                <i class="fas fa-key"></i> Test Credentials
+            </div>
+            <div class="tab" onclick="showSection('features')">
+                <i class="fas fa-check-circle"></i> Feature Checklist
+            </div>
+            <div class="tab" onclick="showSection('timeline')">
+                <i class="fas fa-history"></i> Development Timeline
+            </div>
+            <div class="tab" onclick="showSection('technical')">
+                <i class="fas fa-cog"></i> Technical Info
+            </div>
+        </div>
+
+        <!-- Build Progress Section -->
+        <div id="progress" class="section active">
+            <div class="overall-progress">
+                <h2><i class="fas fa-rocket"></i> Overall Build Progress</h2>
+                <div class="big-percentage">100%</div>
+                <p>All core features implemented and tested</p>
+            </div>
+
+            <div class="progress-grid">
+                <div class="progress-card">
+                    <h4><i class="fas fa-server"></i> Backend Development</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Google Apps Script API</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-desktop"></i> Frontend Development</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>All pages & components</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-user-shield"></i> Authentication</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Login, Signup, Sessions</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-car-side"></i> Vehicle Management</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Add, Edit, Delete vehicles</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-calendar-check"></i> Booking System</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Book, Approve, Decline</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Owner Dashboard</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>All 9 sections</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-user"></i> Renter Dashboard</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill complete" style="width: 100%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Booking history & tracking</span>
+                        <span class="status complete"><i class="fas fa-check"></i> Complete</span>
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <h4><i class="fas fa-credit-card"></i> Payment Integration</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill in-progress" style="width: 75%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span>Stripe (Test Mode)</span>
+                        <span class="status in-progress"><i class="fas fa-clock"></i> In Progress</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links Section -->
+        <div id="links" class="section">
+            <div class="card">
+                <h2><i class="fas fa-external-link-alt"></i> Quick Access Links</h2>
+
+                <div class="links-grid">
+                    <div class="link-card">
+                        <i class="fas fa-home"></i>
+                        <h4>Homepage</h4>
+                        <p>Browse available cars and sign up</p>
+                        <a href="https://rentmycar-demo.netlify.app" target="_blank">Open Site <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="link-card">
+                        <i class="fas fa-user-tie"></i>
+                        <h4>Owner Dashboard</h4>
+                        <p>Manage fleet, bookings & earnings</p>
+                        <a href="https://rentmycar-demo.netlify.app/dashboard.html" target="_blank">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="link-card">
+                        <i class="fas fa-user"></i>
+                        <h4>Renter Dashboard</h4>
+                        <p>View bookings & rental history</p>
+                        <a href="https://rentmycar-demo.netlify.app/renter-dashboard.html" target="_blank">Open Dashboard <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="link-card">
+                        <i class="fas fa-file-alt"></i>
+                        <h4>This Guide</h4>
+                        <p>Build progress & testing info</p>
+                        <a href="https://rentmycar-demo.netlify.app/build.html" target="_blank">Current Page <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Credentials Section -->
+        <div id="credentials" class="section">
+            <div class="card">
+                <h2><i class="fas fa-key"></i> Test Credentials</h2>
+                <p style="color: #94a3b8; margin-bottom: 1.5rem;">Use these accounts to test the platform. You can also create new accounts through the signup form.</p>
+
+                <div class="credentials-box">
+                    <h4><i class="fas fa-user-tie"></i> Owner Account</h4>
+                    <p style="color: #94a3b8; margin-bottom: 1rem;">Use this to test vehicle management, booking approvals, and earnings tracking.</p>
+                    <div class="credential-item">
+                        <label>Email:</label>
+                        <code>demo@carshare.com</code>
+                    </div>
+                    <div class="credential-item">
+                        <label>Password:</label>
+                        <code>demo123</code>
+                    </div>
+                </div>
+
+                <div class="credentials-box" style="background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3);">
+                    <h4 style="color: #a5b4fc;"><i class="fas fa-user"></i> Renter Account</h4>
+                    <p style="color: #94a3b8; margin-bottom: 1rem;">Use this to test car browsing, booking, and rental history.</p>
+                    <div class="credential-item">
+                        <label>Email:</label>
+                        <code>renter@carshare.com</code>
+                    </div>
+                    <div class="credential-item">
+                        <label>Password:</label>
+                        <code>demo123</code>
+                    </div>
+                </div>
+
+                <h3>Creating New Test Accounts</h3>
+                <ol style="color: #cbd5e1; padding-left: 1.5rem;">
+                    <li>Go to <a href="https://rentmycar-demo.netlify.app">https://rentmycar-demo.netlify.app</a></li>
+                    <li>Click <strong>"Sign In"</strong> button</li>
+                    <li>Click <strong>"Sign Up"</strong> link at the bottom</li>
+                    <li>Fill in your details and select <strong>Role</strong> (Renter or Owner)</li>
+                    <li>Click <strong>"Create Account"</strong></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Feature Checklist Section -->
+        <div id="features" class="section">
+            <div class="card">
+                <h2><i class="fas fa-clipboard-check"></i> Feature Testing Checklist</h2>
+
+                <h3>Homepage Features</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check-circle"></i> Car listings display with images, prices, and ratings</li>
+                    <li><i class="fas fa-check-circle"></i> Filter by car type (Sedan, SUV, Sports, etc.)</li>
+                    <li><i class="fas fa-check-circle"></i> Price range slider filtering</li>
+                    <li><i class="fas fa-check-circle"></i> Distance filter</li>
+                    <li><i class="fas fa-check-circle"></i> Book Now buttons functional</li>
+                    <li><i class="fas fa-check-circle"></i> Sign In / Sign Up modals</li>
+                    <li><i class="fas fa-check-circle"></i> Responsive design for mobile</li>
+                </ul>
+
+                <h3>Owner Dashboard</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check-circle"></i> <strong>Overview:</strong> Stats cards (Earnings, Rentals, Bookings, Rating)</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Fleet Manager:</strong> Add new vehicle with full registration</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Fleet Manager:</strong> Edit existing vehicles</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Fleet Manager:</strong> Delete vehicles</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Bookings:</strong> View pending/approved/completed bookings</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Bookings:</strong> Approve/Decline booking requests</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Earnings:</strong> Transaction history</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Analytics:</strong> Charts and statistics</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Maintenance:</strong> Schedule vehicle maintenance</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Reviews:</strong> View customer reviews</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Settings:</strong> Profile, notifications, payment settings</li>
+                </ul>
+
+                <h3>Vehicle Registration Requirements</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check-circle"></i> Vehicle Details: Make, Model, Year, Type, Color</li>
+                    <li><i class="fas fa-check-circle"></i> VIN (17-character validation)</li>
+                    <li><i class="fas fa-check-circle"></i> Registration: License Plate, State, Expiry Date</li>
+                    <li><i class="fas fa-check-circle"></i> Insurance: Provider, Policy Number, Expiry Date</li>
+                    <li><i class="fas fa-check-circle"></i> Document Uploads: Driver's License, Registration, Insurance Card</li>
+                    <li><i class="fas fa-check-circle"></i> Vehicle Photos upload</li>
+                    <li><i class="fas fa-check-circle"></i> Terms & verification confirmation</li>
+                </ul>
+
+                <h3>Renter Features</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check-circle"></i> Browse available cars</li>
+                    <li><i class="fas fa-check-circle"></i> Filter and search functionality</li>
+                    <li><i class="fas fa-check-circle"></i> Book vehicles</li>
+                    <li><i class="fas fa-check-circle"></i> View booking history</li>
+                    <li><i class="fas fa-check-circle"></i> Track active rentals</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Development Timeline Section -->
+        <div id="timeline" class="section">
+            <div class="card">
+                <h2><i class="fas fa-history"></i> Development Timeline</h2>
+
+                <div class="timeline">
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 1 - Complete</div>
+                        <div class="timeline-title">Backend Infrastructure</div>
+                        <div class="timeline-desc">Google Sheets database setup, Google Apps Script REST API (Auth.gs, Cars.gs, Bookings.gs, Utils.gs)</div>
+                    </div>
+
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 2 - Complete</div>
+                        <div class="timeline-title">Frontend API Integration</div>
+                        <div class="timeline-desc">Created config.js and api.js for centralized API communication, session management</div>
+                    </div>
+
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 3 - Complete</div>
+                        <div class="timeline-title">Authentication System</div>
+                        <div class="timeline-desc">User signup, login, logout with role selection (Owner/Renter), session tokens</div>
+                    </div>
+
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 4 - Complete</div>
+                        <div class="timeline-title">Owner Dashboard</div>
+                        <div class="timeline-desc">9 dashboard sections: Overview, Fleet Manager, Bookings, Earnings, Analytics, AI Insights, Maintenance, Reviews, Settings</div>
+                    </div>
+
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 5 - Complete</div>
+                        <div class="timeline-title">Vehicle Registration System</div>
+                        <div class="timeline-desc">Full registration form with VIN, insurance, registration documents, and verification workflow</div>
+                    </div>
+
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 6 - Complete</div>
+                        <div class="timeline-title">Renter Dashboard</div>
+                        <div class="timeline-desc">Booking history, active rentals tracking, role-based dashboard routing</div>
+                    </div>
+
+                    <div class="timeline-item complete">
+                        <div class="timeline-date">Phase 7 - Complete</div>
+                        <div class="timeline-title">Bug Fixes & Polish</div>
+                        <div class="timeline-desc">Fixed navigation, added maintenance modal, edit vehicle functionality, settings form</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">Phase 8 - In Progress</div>
+                        <div class="timeline-title">Payment Integration</div>
+                        <div class="timeline-desc">Stripe payment processing (currently in test mode)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Info Section -->
+        <div id="technical" class="section">
+            <div class="card">
+                <h2><i class="fas fa-cog"></i> Technical Information</h2>
+
+                <h3>Technology Stack</h3>
+                <table>
+                    <tr>
+                        <th>Component</th>
+                        <th>Technology</th>
+                    </tr>
+                    <tr>
+                        <td>Frontend Hosting</td>
+                        <td>Netlify</td>
+                    </tr>
+                    <tr>
+                        <td>Backend API</td>
+                        <td>Google Apps Script</td>
+                    </tr>
+                    <tr>
+                        <td>Database</td>
+                        <td>Google Sheets</td>
+                    </tr>
+                    <tr>
+                        <td>Authentication</td>
+                        <td>Session-based with tokens</td>
+                    </tr>
+                    <tr>
+                        <td>Payments</td>
+                        <td>Stripe (Test Mode)</td>
+                    </tr>
+                    <tr>
+                        <td>Frontend Framework</td>
+                        <td>Vanilla JavaScript</td>
+                    </tr>
+                    <tr>
+                        <td>Styling</td>
+                        <td>Custom CSS</td>
+                    </tr>
+                    <tr>
+                        <td>Icons</td>
+                        <td>Font Awesome 6</td>
+                    </tr>
+                </table>
+
+                <h3>Browser Compatibility</h3>
+                <ul class="checklist">
+                    <li><i class="fas fa-check-circle"></i> Google Chrome (Recommended)</li>
+                    <li><i class="fas fa-check-circle"></i> Microsoft Edge</li>
+                    <li><i class="fas fa-check-circle"></i> Mozilla Firefox</li>
+                    <li><i class="fas fa-check-circle"></i> Safari</li>
+                </ul>
+
+                <h3>Known Limitations (Demo Environment)</h3>
+                <ul style="color: #cbd5e1; padding-left: 1.5rem;">
+                    <li>Document uploads store file names only (production would use cloud storage like AWS S3)</li>
+                    <li>Stripe integration is in test mode</li>
+                    <li>Some dashboard data is simulated for demonstration</li>
+                    <li>Privacy-focused browsers may require allowing cookies/storage</li>
+                </ul>
+
+                <h3>API Endpoints</h3>
+                <table>
+                    <tr>
+                        <th>Endpoint</th>
+                        <th>Method</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><code>/auth/signup</code></td>
+                        <td>POST</td>
+                        <td>Create new account</td>
+                    </tr>
+                    <tr>
+                        <td><code>/auth/login</code></td>
+                        <td>POST</td>
+                        <td>User login</td>
+                    </tr>
+                    <tr>
+                        <td><code>/auth/logout</code></td>
+                        <td>POST</td>
+                        <td>User logout</td>
+                    </tr>
+                    <tr>
+                        <td><code>/cars</code></td>
+                        <td>GET</td>
+                        <td>List all cars</td>
+                    </tr>
+                    <tr>
+                        <td><code>/cars</code></td>
+                        <td>POST</td>
+                        <td>Create car listing</td>
+                    </tr>
+                    <tr>
+                        <td><code>/cars/:id</code></td>
+                        <td>PUT</td>
+                        <td>Update car</td>
+                    </tr>
+                    <tr>
+                        <td><code>/cars/:id</code></td>
+                        <td>DELETE</td>
+                        <td>Delete car</td>
+                    </tr>
+                    <tr>
+                        <td><code>/bookings</code></td>
+                        <td>GET/POST</td>
+                        <td>List/Create bookings</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>RentMyCar Platform &copy; 2026 | Built with <i class="fas fa-heart" style="color: #ef4444;"></i></p>
+            <p style="margin-top: 0.5rem;">Last Updated: January 2026 | Version 1.0.0</p>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active to clicked tab
+            event.target.closest('.tab').classList.add('active');
+        }
+    </script>
+</body>
+</html>

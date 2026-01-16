@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RentMyCar">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="description" content="RentMyCar - Peer-to-peer car rental platform. Rent cars from local owners or list your car to earn money.">
+    <title>RentMyCar - P2P Car Rental Platform</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://via.placeholder.com/180/6366f1/ffffff?text=RC">
+    <link rel="stylesheet" href="styles.css?v=16">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Mobile Slide-out Menu -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-slide-menu" id="mobileSlideMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-user" id="mobileMenuUser">
+                <img src="https://via.placeholder.com/50" alt="User" id="mobileUserAvatar">
+                <div class="mobile-menu-user-info">
+                    <h4 id="mobileUserName">Guest</h4>
+                    <p id="mobileUserEmail">Sign in to continue</p>
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-links">
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="#browse"><i class="fas fa-car"></i> Browse Cars</a>
+            <a href="#instant-book"><i class="fas fa-bolt"></i> Instant Book</a>
+            <div class="mobile-menu-divider"></div>
+            <a href="dashboard.html" id="mobileOwnerLink" style="display: none;"><i class="fas fa-chart-line"></i> Owner Dashboard</a>
+            <a href="renter-dashboard.html" id="mobileRenterLink" style="display: none;"><i class="fas fa-calendar"></i> My Bookings</a>
+            <div class="mobile-menu-divider" id="mobileDivider2" style="display: none;"></div>
+            <a href="#" onclick="openAuthModal(); closeMobileMenu();" id="mobileSignInLink"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+            <a href="#" onclick="logout(); closeMobileMenu();" id="mobileLogoutLink" style="display: none;"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+        </div>
+    </div>
+
+    <!-- Advanced Navigation with AI Assistant -->
+    <nav class="navbar">
+        <div class="container">
+            <button class="hamburger-menu" id="hamburgerMenu" onclick="toggleMobileMenu()" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobileSlideMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="nav-brand">
+                <a href="/" aria-label="RentMyCar home"><i class="fas fa-car"></i> RentMyCar</a>
+            </div>
+            <nav class="nav-menu" aria-label="Main navigation">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#browse" class="nav-link">Browse Cars</a>
+                <a href="#instant-book" class="nav-link">Instant Book</a>
+                <a href="#fleet" class="nav-link">Fleet Manager</a>
+                <a href="#analytics" class="nav-link">Analytics</a>
+                <a href="#insurance" class="nav-link">Insurance</a>
+                <button id="aiAssistant" class="btn btn-ai" aria-label="Open AI Assistant"><i class="fas fa-robot" aria-hidden="true"></i> <span>AI Assistant</span></button>
+                <div id="userMenu" class="user-menu" style="display: none;">
+                    <button id="userBtn" class="btn btn-user">
+                        <img src="https://via.placeholder.com/32" alt="User" class="user-avatar-small">
+                        <span id="userName">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                        <a href="#profile"><i class="fas fa-user-cog"></i> Profile</a>
+                        <a href="#bookings"><i class="fas fa-calendar"></i> My Bookings</a>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+                <button id="authBtn" class="btn btn-primary" onclick="openAuthModal()">Sign In</button>
+            </nav>
+        </div>
+    </nav>
+
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <div class="modal-content auth-modal">
+            <button class="close" onclick="closeAuthModal()" aria-label="Close authentication modal">&times;</button>
+            
+            <div class="auth-container">
+                <div class="auth-header">
+                    <h2 id="authTitle">Welcome Back!</h2>
+                    <p id="authSubtitle">Sign in to access your account</p>
+                </div>
+
+                <!-- Sign In Form -->
+                <form id="signInForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="signInEmail">Email</label>
+                        <input type="email" id="signInEmail" required placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signInPassword">Password</label>
+                        <input type="password" id="signInPassword" required placeholder="Enter your password">
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+                    
+                    <div class="social-auth">
+                        <button type="button" class="btn-social btn-google" onclick="socialAuth('google')">
+                            <i class="fab fa-google"></i> Continue with Google
+                        </button>
+                        <button type="button" class="btn-social btn-facebook" onclick="socialAuth('facebook')">
+                            <i class="fab fa-facebook-f"></i> Continue with Facebook
+                        </button>
+                    </div>
+                    
+                    <p class="auth-switch">
+                        Don't have an account? 
+                        <a href="#" onclick="switchToSignUp()">Sign Up</a>
+                    </p>
+                </form>
+
+                <!-- Sign Up Form -->
+                <form id="signUpForm" class="auth-form" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" required placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" required placeholder="Doe">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signUpEmail">Email</label>
+                        <input type="email" id="signUpEmail" required placeholder="john.doe@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signUpPassword">Password</label>
+                        <input type="password" id="signUpPassword" required placeholder="Create a strong password">
+                        <div class="password-strength">
+                            <div class="strength-bar"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signUpPhone">Phone Number</label>
+                        <input type="tel" id="signUpPhone" placeholder="(555) 123-4567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signUpRole">I want to...</label>
+                        <select id="signUpRole" required class="form-select">
+                            <option value="renter">Rent cars from others</option>
+                            <option value="owner">List my car(s) for rent</option>
+                            <option value="both">Both rent and list cars</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="businessNameGroup">
+                        <label for="signUpBusinessName">Business Name (Optional)</label>
+                        <input type="text" id="signUpBusinessName" placeholder="Your company or business name">
+                        <span class="form-hint">If renting for business purposes</span>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span>I agree to the Terms and Privacy Policy</span>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    
+                    <p class="auth-switch">
+                        Already have an account? 
+                        <a href="#" onclick="switchToSignIn()">Sign In</a>
+                    </p>
+                </form>
+            </div>
+
+            <!-- Demo Mode Notice -->
+            <div class="demo-notice">
+                <i class="fas fa-info-circle"></i>
+                <p>Demo Mode: Use <strong>demo@rentmycar.com</strong> / <strong>demo123</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Assistant Modal -->
+    <div id="aiChatModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3><i class="fas fa-robot"></i> RentMyCar AI Assistant</h3>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" placeholder="Ask me anything about car rentals...">
+                <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+
+    <!-- Advanced Hero with Video Background -->
+    <section id="home" class="hero-advanced" aria-labelledby="hero-title">
+        <video autoplay muted loop class="hero-video">
+            <source src="https://cdn.jsdelivr.net/gh/webpro/video@master/hero-video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay">
+            <div class="container">
+                <h1 id="hero-title" class="hero-title">Next-Gen Car Sharing Platform</h1>
+                <p class="hero-subtitle">AI-Powered • Blockchain Verified • Real-time Tracking</p>
+                
+                <!-- Advanced Search with AI Recommendations -->
+                <div class="advanced-search">
+                    <div class="search-tabs">
+                        <button class="tab-btn active" data-tab="location">Location Search</button>
+                        <button class="tab-btn" data-tab="voice">Voice Search</button>
+                        <button class="tab-btn" data-tab="image">Image Search</button>
+                    </div>
+                    
+                    <div id="locationTab" class="tab-content active">
+                        <div class="search-grid">
+                            <div class="search-field">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="locationSearch" placeholder="Enter location or use current">
+                                <button class="btn-location" onclick="getCurrentLocation()">
+                                    <i class="fas fa-crosshairs"></i>
+                                </button>
+                            </div>
+                            <div class="search-field">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="datetime-local" id="startDateTime">
+                            </div>
+                            <div class="search-field">
+                                <i class="fas fa-calendar-check"></i>
+                                <input type="datetime-local" id="endDateTime">
+                            </div>
+                            <button class="btn btn-search" onclick="advancedSearch()">
+                                <i class="fas fa-search"></i> Search Cars
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="voiceTab" class="tab-content">
+                        <button class="voice-btn" onclick="startVoiceSearch()">
+                            <i class="fas fa-microphone"></i>
+                            <span>Click to speak</span>
+                        </button>
+                        <div id="voiceTranscript"></div>
+                    </div>
+                    
+                    <div id="imageTab" class="tab-content">
+                        <div class="image-upload-area">
+                            <i class="fas fa-camera"></i>
+                            <p>Upload a photo of the car type you want</p>
+                            <input type="file" id="carImageUpload" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Recommendations -->
+                <div class="ai-recommendations">
+                    <h3><i class="fas fa-magic"></i> AI Recommendations for You</h3>
+                    <div id="aiRecommendations" class="recommendation-cards"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-time Stats Dashboard -->
+    <section class="stats-dashboard">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-car"></i>
+                    <h3 id="totalCars">0</h3>
+                    <p>Available Cars</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3 id="activeUsers">0</h3>
+                    <p>Active Users</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-route"></i>
+                    <h3 id="totalTrips">0</h3>
+                    <p>Trips Today</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <h3 id="avgRating">0</h3>
+                    <p>Avg Rating</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Browse Section with Filters -->
+    <section id="browse" class="browse-advanced">
+        <div class="container">
+            <h2>Discover Your Perfect Ride</h2>
+            
+            <!-- Advanced Filters -->
+            <div class="advanced-filters">
+                <div class="filter-group">
+                    <label>Car Type</label>
+                    <div class="filter-chips">
+                        <button class="chip active" data-type="all">All</button>
+                        <button class="chip" data-type="sedan">Sedan</button>
+                        <button class="chip" data-type="suv">SUV</button>
+                        <button class="chip" data-type="sports">Sports</button>
+                        <button class="chip" data-type="luxury">Luxury</button>
+                        <button class="chip" data-type="electric">Electric</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Features</label>
+                    <div class="filter-chips">
+                        <button class="chip" data-feature="autopilot">Autopilot</button>
+                        <button class="chip" data-feature="awd">AWD</button>
+                        <button class="chip" data-feature="convertible">Convertible</button>
+                        <button class="chip" data-feature="petfriendly">Pet Friendly</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Price Range</label>
+                    <div class="price-slider">
+                        <input type="range" id="priceRange" min="0" max="500" value="250">
+                        <span id="priceValue">$0 - $250/day</span>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Distance</label>
+                    <div class="distance-slider">
+                        <input type="range" id="distanceRange" min="1" max="50" value="10">
+                        <span id="distanceValue">Within 10 miles</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                <button class="view-btn" data-view="map"><i class="fas fa-map"></i></button>
+                <button class="view-btn" data-view="ar"><i class="fas fa-vr-cardboard"></i> AR View</button>
+            </div>
+
+            <!-- Cars Grid -->
+            <div id="carsGrid" class="cars-grid-advanced"></div>
+            
+            <!-- Map View -->
+            <div id="mapView" class="map-view" style="display: none;">
+                <div id="map" style="height: 600px;"></div>
+            </div>
+            
+            <!-- AR View Placeholder -->
+            <div id="arView" class="ar-view" style="display: none;">
+                <div class="ar-container">
+                    <i class="fas fa-vr-cardboard"></i>
+                    <h3>AR View Coming Soon</h3>
+                    <p>Experience cars in augmented reality</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instant Book Section -->
+    <section id="instant-book" class="instant-book">
+        <div class="container">
+            <h2>Instant Book - Skip the Wait</h2>
+            <div class="instant-book-grid">
+                <div class="instant-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Instant Approval</h3>
+                    <p>Book verified cars instantly without owner approval</p>
+                </div>
+                <div class="instant-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Digital Key</h3>
+                    <p>Unlock cars with your phone - no key exchange needed</p>
+                </div>
+                <div class="instant-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Fully Insured</h3>
+                    <p>Comprehensive coverage included in every instant booking</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fleet Manager Dashboard -->
+    <section id="fleet" class="fleet-manager">
+        <div class="container">
+            <h2>Fleet Manager Pro</h2>
+            <div class="fleet-features">
+                <div class="feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Revenue Optimization</h3>
+                    <p>AI-powered pricing suggestions to maximize earnings</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Smart Scheduling</h3>
+                    <p>Automated booking management with conflict resolution</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-tools"></i>
+                    <h3>Maintenance Alerts</h3>
+                    <p>Predictive maintenance scheduling based on usage</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Guest Communication</h3>
+                    <p>Automated messaging and 24/7 AI support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Analytics -->
+    <section id="analytics" class="analytics-section">
+        <div class="container">
+            <h2>Real-time Analytics Dashboard</h2>
+            <div class="analytics-grid">
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="bookingsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="ratingsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="utilizationChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Insurance & Protection -->
+    <section id="insurance" class="insurance-section">
+        <div class="container">
+            <h2>Comprehensive Protection Plans</h2>
+            <div class="insurance-tiers">
+                <div class="tier-card">
+                    <h3>Basic Protection</h3>
+                    <p class="price">$15/day</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> $1,000 deductible</li>
+                        <li><i class="fas fa-check"></i> Liability coverage</li>
+                        <li><i class="fas fa-check"></i> 24/7 roadside assistance</li>
+                    </ul>
+                    <button class="btn btn-outline">Select</button>
+                </div>
+                <div class="tier-card featured">
+                    <div class="badge">Most Popular</div>
+                    <h3>Premium Protection</h3>
+                    <p class="price">$25/day</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> $500 deductible</li>
+                        <li><i class="fas fa-check"></i> Comprehensive coverage</li>
+                        <li><i class="fas fa-check"></i> Loss of use protection</li>
+                        <li><i class="fas fa-check"></i> Personal effects coverage</li>
+                    </ul>
+                    <button class="btn btn-primary">Select</button>
+                </div>
+                <div class="tier-card">
+                    <h3>Ultimate Protection</h3>
+                    <p class="price">$40/day</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> $0 deductible</li>
+                        <li><i class="fas fa-check"></i> Full coverage</li>
+                        <li><i class="fas fa-check"></i> Trip interruption coverage</li>
+                        <li><i class="fas fa-check"></i> Identity theft protection</li>
+                    </ul>
+                    <button class="btn btn-outline">Select</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </main><!-- End main content -->
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>RentMyCar</h3>
+                    <p>The most advanced peer-to-peer car rental platform</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <ul>
+                        <li><a href="#">AI Assistant</a></li>
+                        <li><a href="#">Blockchain Verification</a></li>
+                        <li><a href="#">Real-time GPS</a></li>
+                        <li><a href="#">Digital Keys</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Safety Guidelines</a></li>
+                        <li><a href="#">Insurance Info</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Download App</h4>
+                    <div class="app-buttons">
+                        <button class="app-btn">
+                            <i class="fab fa-apple"></i> App Store
+                        </button>
+                        <button class="app-btn">
+                            <i class="fab fa-google-play"></i> Google Play
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 RentMyCar. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a href="index.html" class="mobile-nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#browse" class="mobile-nav-item">
+                <i class="fas fa-search"></i>
+                <span>Search</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="openAuthModal()">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Bookings</span>
+            </a>
+            <a href="#" class="mobile-nav-item" onclick="openAuthModal()" id="mobileProfileLink">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fabButton" onclick="openAuthModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Pull to Refresh Indicator -->
+    <div class="pull-to-refresh" id="pullToRefresh">
+        <i class="fas fa-sync-alt"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="src/utils/sanitize.js?v=1"></script>
+    <script src="config.js?v=15"></script>
+    <script src="api.js?v=15"></script>
+    <script src="auth-new.js?v=15"></script>
+    <script src="app.js?v=15"></script>
+    <script src="mobile.js?v=15"></script>
+</body>
+</html>

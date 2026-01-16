@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard Debug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .debug-log {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: yellow;
+            padding: 10px;
+            font-size: 12px;
+            z-index: 9999;
+            max-width: 200px;
+        }
+        
+        /* Header */
+        .header {
+            background: #6366f1;
+            color: white;
+            padding: 20px 15px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .earnings {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .amount {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        /* Content */
+        .content {
+            padding: 15px;
+            padding-bottom: 70px;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6366f1;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Card */
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        /* Bottom Nav */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-item {
+            padding: 5px;
+            background: none;
+            border: none;
+            color: #666;
+        }
+        
+        .nav-item.active {
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Debug Log -->
+    <div class="debug-log" id="debugLog">Page loaded</div>
+    
+    <!-- Header -->
+    <div class="header">
+        <h1>Dashboard</h1>
+        <div class="earnings">
+            <div class="amount" id="earnings">$0</div>
+            <div>Total Earnings</div>
+        </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="content">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Cars</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Bookings</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">4.9</div>
+                <div class="stat-label">Rating</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">$450</div>
+                <div class="stat-label">Today</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3>Active Rental</h3>
+            <p>Tesla Model 3 - Sarah M.</p>
+            <p>2h 15m remaining</p>
+        </div>
+        
+        <div class="card">
+            <h3>Upcoming</h3>
+            <p>BMW X5 - Tomorrow 10am</p>
+            <p>3 day rental</p>
+        </div>
+    </div>
+    
+    <!-- Bottom Nav -->
+    <div class="nav">
+        <button class="nav-item active">Home</button>
+        <button class="nav-item">Fleet</button>
+        <button class="nav-item">Bookings</button>
+        <button class="nav-item">Earnings</button>
+        <button class="nav-item">Profile</button>
+    </div>
+    
+    <script>
+        // Debug logging
+        const log = (msg) => {
+            console.log(msg);
+            const debugLog = document.getElementById('debugLog');
+            if (debugLog) {
+                debugLog.textContent = msg;
+            }
+        };
+        
+        log('Script started');
+        
+        // Simple animation
+        setTimeout(() => {
+            log('Starting animation');
+            try {
+                const earnings = document.getElementById('earnings');
+                if (earnings) {
+                    earnings.textContent = '$12,450';
+                    log('Animation complete');
+                } else {
+                    log('Earnings element not found');
+                }
+            } catch (error) {
+                log('Error: ' + error.message);
+            }
+        }, 1000);
+        
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
+            item.addEventListener('click', function() {
+                log('Nav clicked: ' + index);
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Monitor visibility
+        document.addEventListener('visibilitychange', () => {
+            log('Visibility: ' + document.visibilityState);
+        });
+        
+        // Catch all errors
+        window.onerror = function(msg, url, line) {
+            log('Error: ' + msg + ' at line ' + line);
+            return true;
+        };
+    </script>
+</body>
+</html>

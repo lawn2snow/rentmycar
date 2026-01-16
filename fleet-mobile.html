@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6366f1">
+    <title>My Fleet - CarShare</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --white: #ffffff;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        
+        /* App Header */
+        .app-header {
+            background: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            padding: 8px;
+            margin: -8px;
+            cursor: pointer;
+        }
+        
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        
+        /* Fleet Stats */
+        .fleet-stats {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        /* Filter Tabs */
+        .filter-tabs {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-bottom: 1px solid var(--light);
+        }
+        
+        .filter-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            background: var(--light);
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--gray);
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Car Cards */
+        .cars-container {
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        
+        .car-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .car-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+        
+        .status-available {
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+        }
+        
+        .status-rented {
+            background: rgba(99, 102, 241, 0.9);
+            color: white;
+        }
+        
+        .status-maintenance {
+            background: rgba(245, 158, 11, 0.9);
+            color: white;
+        }
+        
+        .car-image-container {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .car-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .car-content {
+            padding: 16px;
+        }
+        
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+        
+        .car-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .car-details {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        .car-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+        }
+        
+        .rating-star {
+            color: var(--warning);
+        }
+        
+        /* Car Stats Grid */
+        .car-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 8px 4px;
+            background: var(--light);
+            border-radius: 8px;
+        }
+        
+        .stat-item-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .stat-item-label {
+            font-size: 11px;
+            color: var(--gray);
+            margin-top: 2px;
+        }
+        
+        /* Action Buttons */
+        .car-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+        }
+        
+        .btn-danger {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+        
+        /* Add Car Card */
+        .add-car-card {
+            background: white;
+            border: 2px dashed var(--primary);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        
+        .add-car-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .add-car-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+        
+        .add-car-subtext {
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+        
+        .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        /* Floating Action Menu */
+        .fab-menu {
+            position: fixed;
+            bottom: 80px;
+            right: 16px;
+            z-index: 99;
+        }
+        
+        .fab-main {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        
+        .fab-main.open {
+            transform: rotate(45deg);
+        }
+        
+        .fab-options {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: none;
+        }
+        
+        .fab-options.show {
+            display: block;
+        }
+        
+        .fab-option {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            gap: 8px;
+        }
+        
+        .fab-label {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .fab-btn {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Header -->
+    <header class="app-header">
+        <button class="back-btn" onclick="window.location.href='dashboard-mobile.html'">←</button>
+        <h1 class="header-title">My Fleet</h1>
+        <button class="add-btn" onclick="addNewCar()">
+            <span>+</span>
+            <span>Add</span>
+        </button>
+    </header>
+    
+    <!-- Fleet Stats -->
+    <div class="fleet-stats">
+        <div class="stat">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Total Cars</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Available</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">92%</div>
+            <div class="stat-label">Utilization</div>
+        </div>
+    </div>
+    
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+        <button class="tab active">All Cars</button>
+        <button class="tab">Available</button>
+        <button class="tab">Rented</button>
+        <button class="tab">Maintenance</button>
+    </div>
+    
+    <!-- Cars Container -->
+    <div class="cars-container">
+        <!-- Car Card 1 -->
+        <div class="car-card">
+            <div class="car-status status-rented">Rented</div>
+            <div class="car-image-container">
+                <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400" alt="Tesla Model 3" class="car-image">
+            </div>
+            <div class="car-content">
+                <div class="car-header">
+                    <div>
+                        <div class="car-name">Tesla Model 3</div>
+                        <div class="car-details">2023 • Long Range • White</div>
+                    </div>
+                    <div class="car-rating">
+                        <span class="rating-star">⭐</span>
+                        <span>4.9</span>
+                    </div>
+                </div>
+                
+                <div class="car-stats">
+                    <div class="stat-item">
+                        <div class="stat-item-value">$4.2K</div>
+                        <div class="stat-item-label">Earned</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">35</div>
+                        <div class="stat-item-label">Trips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">2.5K</div>
+                        <div class="stat-item-label">Miles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">95%</div>
+                        <div class="stat-item-label">Booked</div>
+                    </div>
+                </div>
+                
+                <div class="car-actions">
+                    <button class="action-btn btn-primary">
+                        <span>📊</span>
+                        <span>Analytics</span>
+                    </button>
+                    <button class="action-btn btn-secondary">
+                        <span>📅</span>
+                        <span>Calendar</span>
+                    </button>
+                    <button class="action-btn btn-secondary">
+                        <span>✏️</span>
+                        <span>Edit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Car Card 2 -->
+        <div class="car-card">
+            <div class="car-status status-available">Available</div>
+            <div class="car-image-container">
+                <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=400" alt="BMW X5" class="car-image">
+            </div>
+            <div class="car-content">
+                <div class="car-header">
+                    <div>
+                        <div class="car-name">BMW X5</div>
+                        <div class="car-details">2022 • xDrive40i • Black</div>
+                    </div>
+                    <div class="car-rating">
+                        <span class="rating-star">⭐</span>
+                        <span>4.8</span>
+                    </div>
+                </div>
+                
+                <div class="car-stats">
+                    <div class="stat-item">
+                        <div class="stat-item-value">$3.8K</div>
+                        <div class="stat-item-label">Earned</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">28</div>
+                        <div class="stat-item-label">Trips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">1.8K</div>
+                        <div class="stat-item-label">Miles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">88%</div>
+                        <div class="stat-item-label">Booked</div>
+                    </div>
+                </div>
+                
+                <div class="car-actions">
+                    <button class="action-btn btn-primary">
+                        <span>📊</span>
+                        <span>Analytics</span>
+                    </button>
+                    <button class="action-btn btn-secondary">
+                        <span>📅</span>
+                        <span>Calendar</span>
+                    </button>
+                    <button class="action-btn btn-secondary">
+                        <span>✏️</span>
+                        <span>Edit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Car Card 3 -->
+        <div class="car-card">
+            <div class="car-status status-maintenance">Maintenance</div>
+            <div class="car-image-container">
+                <img src="https://images.unsplash.com/photo-1606664515524-ed8f24b8c1e0?w=400" alt="Mercedes S-Class" class="car-image">
+            </div>
+            <div class="car-content">
+                <div class="car-header">
+                    <div>
+                        <div class="car-name">Mercedes S-Class</div>
+                        <div class="car-details">2023 • S450 • Silver</div>
+                    </div>
+                    <div class="car-rating">
+                        <span class="rating-star">⭐</span>
+                        <span>5.0</span>
+                    </div>
+                </div>
+                
+                <div class="car-stats">
+                    <div class="stat-item">
+                        <div class="stat-item-value">$7.5K</div>
+                        <div class="stat-item-label">Earned</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">43</div>
+                        <div class="stat-item-label">Trips</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">3.2K</div>
+                        <div class="stat-item-label">Miles</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-item-value">97%</div>
+                        <div class="stat-item-label">Booked</div>
+                    </div>
+                </div>
+                
+                <div class="car-actions">
+                    <button class="action-btn btn-primary">
+                        <span>🔧</span>
+                        <span>Service Info</span>
+                    </button>
+                    <button class="action-btn btn-secondary">
+                        <span>📅</span>
+                        <span>Schedule</span>
+                    </button>
+                    <button class="action-btn btn-danger">
+                        <span>⏸️</span>
+                        <span>Pause</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Car Card -->
+        <div class="add-car-card" onclick="addNewCar()">
+            <div class="add-car-icon">+</div>
+            <div class="add-car-text">Add New Vehicle</div>
+            <div class="add-car-subtext">List another car to increase earnings</div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard-mobile.html" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span class="nav-label">Overview</span>
+        </a>
+        <a href="fleet-mobile.html" class="nav-item active">
+            <span class="nav-icon">🚗</span>
+            <span class="nav-label">Fleet</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">📅</span>
+            <span class="nav-label">Bookings</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">💰</span>
+            <span class="nav-label">Earnings</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile</span>
+        </a>
+    </nav>
+    
+    <!-- Floating Action Menu -->
+    <div class="fab-menu">
+        <div class="fab-options" id="fabOptions">
+            <div class="fab-option">
+                <span class="fab-label">Block Dates</span>
+                <button class="fab-btn">📅</button>
+            </div>
+            <div class="fab-option">
+                <span class="fab-label">Quick Stats</span>
+                <button class="fab-btn">📊</button>
+            </div>
+            <div class="fab-option">
+                <span class="fab-label">Add Car</span>
+                <button class="fab-btn">🚗</button>
+            </div>
+        </div>
+        <button class="fab-main" id="fabMain" onclick="toggleFab()">+</button>
+    </div>
+    
+    <script>
+        // Toggle FAB menu
+        function toggleFab() {
+            const fabMain = document.getElementById('fabMain');
+            const fabOptions = document.getElementById('fabOptions');
+            
+            fabMain.classList.toggle('open');
+            fabOptions.classList.toggle('show');
+        }
+        
+        // Add new car
+        function addNewCar() {
+            if (confirm('Add a new car to your fleet?')) {
+                alert('Opening car listing form...');
+            }
+        }
+        
+        // Filter tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter logic would go here
+                console.log('Filtering by:', this.textContent);
+            });
+        });
+        
+        // Car action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const action = this.textContent.trim();
+                console.log('Action:', action);
+                
+                // Show toast notification
+                showToast(`${action} clicked`);
+            });
+        });
+        
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 90px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #333;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 1000;
+                animation: slideUp 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 2000);
+        }
+        
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideUp {
+                from {
+                    transform: translateX(-50%) translateY(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(-50%) translateY(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

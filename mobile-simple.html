@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6366f1">
+    <title>CarShare</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            height: 56px;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            color: #6366f1;
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #333;
+            padding: 8px;
+        }
+        
+        /* Main Content */
+        .main {
+            padding-top: 56px;
+            padding-bottom: 70px;
+            min-height: 100vh;
+        }
+        
+        /* Search Section */
+        .search-section {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            padding: 20px 16px;
+            color: white;
+        }
+        
+        .search-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+        
+        .search-box {
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search-box input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .search-icon {
+            margin-right: 10px;
+        }
+        
+        /* Quick Filters */
+        .filters {
+            display: flex;
+            gap: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 2px solid #6366f1;
+            border-radius: 20px;
+            padding: 8px 16px;
+            white-space: nowrap;
+            font-size: 14px;
+            color: #6366f1;
+            font-weight: 600;
+        }
+        
+        .filter-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+        
+        /* Cars Section */
+        .section-title {
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .cars-grid {
+            padding: 0 16px 16px;
+        }
+        
+        .car-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .car-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .car-info {
+            padding: 12px;
+        }
+        
+        .car-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .car-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .car-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #6366f1;
+        }
+        
+        .book-btn {
+            width: 100%;
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            height: 60px;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 10px;
+            gap: 4px;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+        
+        .nav-item.active {
+            color: #6366f1;
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+        }
+        
+        /* Side Menu */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background: white;
+            z-index: 200;
+            transition: left 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+        }
+        
+        .side-menu.open {
+            left: 0;
+        }
+        
+        .menu-header {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 20px;
+        }
+        
+        .menu-items {
+            padding: 20px;
+        }
+        
+        .menu-item {
+            display: block;
+            padding: 12px 0;
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 150;
+            display: none;
+        }
+        
+        .overlay.show {
+            display: block;
+        }
+        
+        /* Auth Modal */
+        .auth-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 24px;
+            border-radius: 16px;
+            z-index: 300;
+            display: none;
+        }
+        
+        .auth-modal.show {
+            display: block;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="menu-btn" onclick="openMenu()">☰</button>
+        <h1>CarShare</h1>
+        <button class="menu-btn" onclick="showAuth()">👤</button>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Search Section -->
+        <section class="search-section">
+            <h2 class="search-title">Find Your Perfect Ride</h2>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search location or car">
+            </div>
+        </section>
+        
+        <!-- Quick Filters -->
+        <div class="filters">
+            <button class="filter-btn active">All Cars</button>
+            <button class="filter-btn">⚡ Instant</button>
+            <button class="filter-btn">🌱 Electric</button>
+            <button class="filter-btn">💎 Luxury</button>
+            <button class="filter-btn">🚙 SUV</button>
+        </div>
+        
+        <!-- Cars Grid -->
+        <h3 class="section-title">Available Cars Near You</h3>
+        <div class="cars-grid">
+            <div class="car-card">
+                <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400" alt="Tesla Model 3" class="car-image">
+                <div class="car-info">
+                    <h4 class="car-name">Tesla Model 3</h4>
+                    <div class="car-details">
+                        <span>⭐ 4.9 • 0.5 miles</span>
+                        <span>⚡ Instant Book</span>
+                    </div>
+                    <div class="car-price">$120/day</div>
+                    <button class="book-btn" onclick="bookCar()">Book Now</button>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=400" alt="BMW X5" class="car-image">
+                <div class="car-info">
+                    <h4 class="car-name">BMW X5</h4>
+                    <div class="car-details">
+                        <span>⭐ 4.8 • 1.2 miles</span>
+                        <span>🚙 SUV</span>
+                    </div>
+                    <div class="car-price">$150/day</div>
+                    <button class="book-btn" onclick="bookCar()">Book Now</button>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <img src="https://images.unsplash.com/photo-1606664515524-ed8f24b8c1e0?w=400" alt="Mercedes S-Class" class="car-image">
+                <div class="car-info">
+                    <h4 class="car-name">Mercedes S-Class</h4>
+                    <div class="car-details">
+                        <span>⭐ 5.0 • 2.0 miles</span>
+                        <span>💎 Luxury</span>
+                    </div>
+                    <div class="car-price">$250/day</div>
+                    <button class="book-btn" onclick="bookCar()">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">🗺️</span>
+            <span>Explore</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">➕</span>
+            <span>List Car</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">🚗</span>
+            <span>Trips</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </button>
+    </nav>
+    
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <h2>Menu</h2>
+        </div>
+        <div class="menu-items">
+            <a href="#" class="menu-item">Browse All Cars</a>
+            <a href="#" class="menu-item">Instant Book</a>
+            <a href="#" class="menu-item">Electric Cars</a>
+            <a href="#" class="menu-item">Luxury Collection</a>
+            <a href="#" class="menu-item">My Bookings</a>
+            <a href="#" class="menu-item">List Your Car</a>
+            <a href="#" class="menu-item">Help & Support</a>
+            <a href="#" class="menu-item">Settings</a>
+        </div>
+    </div>
+    
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <h2 class="modal-title">Sign In</h2>
+        <input type="email" class="input-field" placeholder="Email" value="demo@carshare.com">
+        <input type="password" class="input-field" placeholder="Password" value="demo123">
+        <button class="auth-btn" onclick="signIn()">Sign In</button>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+    
+    <script>
+        function openMenu() {
+            document.getElementById('sideMenu').classList.add('open');
+            document.getElementById('overlay').classList.add('show');
+        }
+        
+        function closeMenu() {
+            document.getElementById('sideMenu').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+        }
+        
+        function showAuth() {
+            document.getElementById('authModal').classList.add('show');
+            document.getElementById('overlay').classList.add('show');
+        }
+        
+        function signIn() {
+            alert('Signed in successfully!');
+            document.getElementById('authModal').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+        }
+        
+        function bookCar() {
+            if (confirm('Book this car?')) {
+                alert('Car booked successfully! Check your trips.');
+            }
+        }
+        
+        // Handle bottom nav
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // Handle filters
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

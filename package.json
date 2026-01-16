@@ -1,0 +1,36 @@
+{
+  "name": "rentmycar",
+  "version": "2.0.0",
+  "description": "RentMyCar - P2P Car Rental Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js",
+    "functions:install": "cd netlify/functions && npm install",
+    "functions:dev": "netlify dev"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "terser": "^5.26.0",
+    "vite": "^5.0.10"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "bcryptjs": "^2.4.3",
+    "chart.js": "^4.4.1",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "car-rental",
+    "p2p",
+    "marketplace",
+    "pwa"
+  ],
+  "author": "RentMyCar",
+  "license": "MIT"
+}

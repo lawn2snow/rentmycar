@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#6366f1">
+    <title>CarShare - Rent Cars Instantly</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="app-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Swiper for mobile gestures -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+</head>
+<body class="app-body">
+    
+    <!-- App Container -->
+    <div class="app-container">
+        
+        <!-- Status Bar (iOS style) -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span class="carrier">CarShare</span>
+                <i class="fas fa-wifi"></i>
+            </div>
+            <div class="status-center">
+                <span id="currentTime">9:41 AM</span>
+            </div>
+            <div class="status-right">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-battery-three-quarters"></i>
+            </div>
+        </div>
+
+        <!-- App Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <button class="btn-menu" onclick="openSideMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="app-title">CarShare</h1>
+                <button class="btn-notifications" onclick="openNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            
+            <!-- Home Screen -->
+            <section id="homeScreen" class="app-screen active">
+                
+                <!-- Search Card -->
+                <div class="search-card">
+                    <h2>Where do you want to go?</h2>
+                    <div class="search-input-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search location or car type" id="searchInput">
+                        <button class="btn-mic" onclick="startVoiceSearch()">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Quick Filters -->
+                    <div class="quick-filters">
+                        <button class="filter-chip active">
+                            <i class="fas fa-bolt"></i> Instant
+                        </button>
+                        <button class="filter-chip">
+                            <i class="fas fa-leaf"></i> Eco
+                        </button>
+                        <button class="filter-chip">
+                            <i class="fas fa-gem"></i> Luxury
+                        </button>
+                        <button class="filter-chip">
+                            <i class="fas fa-car-side"></i> SUV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Featured Cars Carousel -->
+                <div class="section-header">
+                    <h3>Featured Cars</h3>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                
+                <div class="swiper featured-carousel">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="car-card-mini">
+                                <div class="car-image">
+                                    <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400" alt="Tesla Model 3">
+                                    <div class="instant-badge">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                </div>
+                                <div class="car-info">
+                                    <h4>Tesla Model 3</h4>
+                                    <div class="car-meta">
+                                        <span class="rating"><i class="fas fa-star"></i> 4.9</span>
+                                        <span class="price">$120/day</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="swiper-slide">
+                            <div class="car-card-mini">
+                                <div class="car-image">
+                                    <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=400" alt="BMW X5">
+                                </div>
+                                <div class="car-info">
+                                    <h4>BMW X5</h4>
+                                    <div class="car-meta">
+                                        <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+                                        <span class="price">$150/day</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="swiper-slide">
+                            <div class="car-card-mini">
+                                <div class="car-image">
+                                    <img src="https://images.unsplash.com/photo-1606664515524-ed8f24b8c1e0?w=400" alt="Mercedes S-Class">
+                                    <div class="instant-badge">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                </div>
+                                <div class="car-info">
+                                    <h4>Mercedes S-Class</h4>
+                                    <div class="car-meta">
+                                        <span class="rating"><i class="fas fa-star"></i> 5.0</span>
+                                        <span class="price">$250/day</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Near You Section -->
+                <div class="section-header">
+                    <h3>Cars Near You</h3>
+                    <a href="#" class="see-all">Map view</a>
+                </div>
+                
+                <div class="cars-list">
+                    <div class="car-list-item" onclick="openCarDetails(1)">
+                        <img src="https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=100" alt="Car">
+                        <div class="car-list-info">
+                            <h4>Porsche 911 Turbo</h4>
+                            <p class="distance"><i class="fas fa-map-marker-alt"></i> 0.5 miles away</p>
+                            <div class="car-list-meta">
+                                <span class="rating"><i class="fas fa-star"></i> 4.9</span>
+                                <span class="trips">127 trips</span>
+                            </div>
+                        </div>
+                        <div class="car-list-price">
+                            <span class="price">$350</span>
+                            <span class="per-day">/day</span>
+                        </div>
+                    </div>
+                    
+                    <div class="car-list-item" onclick="openCarDetails(2)">
+                        <img src="https://images.unsplash.com/photo-1619682817672-f6ad9fb7ce77?w=100" alt="Car">
+                        <div class="car-list-info">
+                            <h4>Audi e-tron GT</h4>
+                            <p class="distance"><i class="fas fa-map-marker-alt"></i> 1.2 miles away</p>
+                            <div class="car-list-meta">
+                                <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+                                <span class="trips">89 trips</span>
+                            </div>
+                        </div>
+                        <div class="car-list-price">
+                            <span class="price">$280</span>
+                            <span class="per-day">/day</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Explore Screen -->
+            <section id="exploreScreen" class="app-screen">
+                <!-- Map View -->
+                <div class="map-container">
+                    <div id="mapView" class="map-full"></div>
+                    
+                    <!-- Map Controls -->
+                    <div class="map-controls">
+                        <button class="map-btn" onclick="centerMap()">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                        <button class="map-btn" onclick="toggleMapType()">
+                            <i class="fas fa-layer-group"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Car Preview Card (shows when marker clicked) -->
+                    <div class="map-car-preview" id="mapCarPreview" style="display: none;">
+                        <img src="" alt="Car" id="previewImage">
+                        <div class="preview-info">
+                            <h4 id="previewName">Tesla Model 3</h4>
+                            <p id="previewDistance">0.5 miles away</p>
+                            <div class="preview-meta">
+                                <span class="price" id="previewPrice">$120/day</span>
+                                <button class="btn-book-small">Book Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trips Screen -->
+            <section id="tripsScreen" class="app-screen">
+                <div class="trips-container">
+                    <!-- Active Trip Card -->
+                    <div class="trip-status-card active-trip">
+                        <div class="trip-header">
+                            <span class="trip-badge">Active Now</span>
+                            <span class="trip-time">2h 15m remaining</span>
+                        </div>
+                        <div class="trip-car">
+                            <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=100" alt="Tesla">
+                            <div class="trip-car-info">
+                                <h4>Tesla Model 3</h4>
+                                <p>License: ABC 123</p>
+                            </div>
+                            <button class="btn-unlock" onclick="unlockCar()">
+                                <i class="fas fa-lock-open"></i>
+                                Unlock
+                            </button>
+                        </div>
+                        <div class="trip-actions">
+                            <button class="trip-action-btn">
+                                <i class="fas fa-route"></i>
+                                Navigate
+                            </button>
+                            <button class="trip-action-btn">
+                                <i class="fas fa-phone"></i>
+                                Support
+                            </button>
+                            <button class="trip-action-btn">
+                                <i class="fas fa-clock"></i>
+                                Extend
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Trips -->
+                    <div class="section-header">
+                        <h3>Upcoming Trips</h3>
+                    </div>
+                    
+                    <div class="trip-card">
+                        <div class="trip-date">
+                            <span class="day">25</span>
+                            <span class="month">Oct</span>
+                        </div>
+                        <div class="trip-details">
+                            <h4>BMW X5</h4>
+                            <p>Friday, 2:00 PM - Sunday, 6:00 PM</p>
+                            <span class="trip-location"><i class="fas fa-map-marker-alt"></i> Downtown Location</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <!-- Past Trips -->
+                    <div class="section-header">
+                        <h3>Past Trips</h3>
+                    </div>
+                    
+                    <div class="trip-card past">
+                        <div class="trip-date">
+                            <span class="day">10</span>
+                            <span class="month">Oct</span>
+                        </div>
+                        <div class="trip-details">
+                            <h4>Mercedes S-Class</h4>
+                            <p>3 day trip • $750 total</p>
+                            <button class="btn-rate">Rate Trip</button>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Screen -->
+            <section id="profileScreen" class="app-screen">
+                <div class="profile-container">
+                    <!-- Profile Header -->
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img src="https://ui-avatars.com/api/?name=John+Doe&background=6366f1&color=fff&size=120" alt="Profile">
+                            <button class="btn-edit-avatar">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <h2>John Doe</h2>
+                        <p class="profile-subtitle">Member since Oct 2024</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="stat-value">23</span>
+                                <span class="stat-label">Trips</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">4.9</span>
+                                <span class="stat-label">Rating</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">2</span>
+                                <span class="stat-label">Cars Listed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Menu -->
+                    <div class="profile-menu">
+                        <a href="#" class="profile-menu-item">
+                            <i class="fas fa-user-edit"></i>
+                            <span>Edit Profile</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="profile-menu-item">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Payment Methods</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="dashboard.html" class="profile-menu-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Owner Dashboard</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="profile-menu-item">
+                            <i class="fas fa-car"></i>
+                            <span>List Your Car</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="profile-menu-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Insurance & Protection</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="profile-menu-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="profile-menu-item">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help & Support</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="#" class="profile-menu-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Sign Out</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="switchScreen('homeScreen')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" onclick="switchScreen('exploreScreen')">
+                <i class="fas fa-map"></i>
+                <span>Explore</span>
+            </button>
+            <button class="nav-item add-car" onclick="openAddCar()">
+                <i class="fas fa-plus-circle"></i>
+            </button>
+            <button class="nav-item" onclick="switchScreen('tripsScreen')">
+                <i class="fas fa-route"></i>
+                <span>Trips</span>
+            </button>
+            <button class="nav-item" onclick="switchScreen('profileScreen')">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Side Menu (Drawer) -->
+    <div class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <h2>Menu</h2>
+            <button class="btn-close" onclick="closeSideMenu()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="side-menu-content">
+            <a href="#" class="menu-item">
+                <i class="fas fa-car"></i>
+                Browse All Cars
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-bolt"></i>
+                Instant Book Cars
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-star"></i>
+                Top Rated
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-tag"></i>
+                Deals & Discounts
+            </a>
+            <div class="menu-divider"></div>
+            <a href="#" class="menu-item">
+                <i class="fas fa-info-circle"></i>
+                About
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-envelope"></i>
+                Contact Us
+            </a>
+        </div>
+    </div>
+
+    <!-- Car Details Modal (Bottom Sheet) -->
+    <div class="bottom-sheet" id="carDetailsSheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-content">
+            <div class="car-detail-images swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800" alt="Car">
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+            
+            <div class="car-detail-info">
+                <div class="detail-header">
+                    <h2>Tesla Model 3</h2>
+                    <button class="btn-favorite">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                
+                <div class="detail-meta">
+                    <span class="rating"><i class="fas fa-star"></i> 4.9 (127)</span>
+                    <span class="distance"><i class="fas fa-map-marker-alt"></i> 0.5 mi</span>
+                    <span class="trips"><i class="fas fa-route"></i> 234 trips</span>
+                </div>
+                
+                <div class="detail-features">
+                    <div class="feature">
+                        <i class="fas fa-users"></i>
+                        <span>5 seats</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-cog"></i>
+                        <span>Automatic</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>Electric</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-suitcase"></i>
+                        <span>4 bags</span>
+                    </div>
+                </div>
+                
+                <div class="detail-owner">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+M&background=6366f1&color=fff&size=50" alt="Owner">
+                    <div class="owner-info">
+                        <h4>Sarah M.</h4>
+                        <p>Superhost • Responds in 1 hour</p>
+                    </div>
+                    <button class="btn-message">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                </div>
+                
+                <div class="detail-description">
+                    <h3>About this car</h3>
+                    <p>Experience the future of driving with this 2023 Tesla Model 3 Long Range. Features autopilot, premium sound system, and access to Tesla Supercharger network.</p>
+                </div>
+                
+                <div class="detail-price">
+                    <div class="price-info">
+                        <span class="price-value">$120</span>
+                        <span class="price-unit">/day</span>
+                    </div>
+                    <button class="btn-book-now" onclick="bookCar()">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Panel -->
+    <div class="notifications-panel" id="notificationsPanel">
+        <div class="panel-header">
+            <h3>Notifications</h3>
+            <button class="btn-close" onclick="closeNotifications()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notifications-list">
+            <div class="notification-item unread">
+                <div class="notification-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="notification-content">
+                    <h4>Booking Confirmed</h4>
+                    <p>Your Tesla Model 3 booking is confirmed for tomorrow</p>
+                    <span class="notification-time">2 min ago</span>
+                </div>
+            </div>
+            
+            <div class="notification-item">
+                <div class="notification-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="notification-content">
+                    <h4>Rate Your Trip</h4>
+                    <p>How was your experience with BMW X5?</p>
+                    <span class="notification-time">1 hour ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Signup Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <button class="btn-close" onclick="closeAuth()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="auth-logo">
+                <i class="fas fa-car"></i>
+            </div>
+            
+            <h2>Welcome to CarShare</h2>
+            <p>Sign in to start your journey</p>
+            
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Email address" required>
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password" required>
+                </div>
+                
+                <button type="submit" class="btn-submit">Sign In</button>
+            </form>
+            
+            <div class="auth-divider">
+                <span>or continue with</span>
+            </div>
+            
+            <div class="social-buttons">
+                <button class="btn-social google">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button class="btn-social apple">
+                    <i class="fab fa-apple"></i>
+                </button>
+                <button class="btn-social facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+            </div>
+            
+            <p class="auth-footer">
+                Don't have an account? <a href="#">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="openAIAssistant()">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="app-mobile.js"></script>
+</body>
+</html>

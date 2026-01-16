@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RentMyCar">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6366f1">
+    <title>RentMyCar - Owner Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css?v=20">
+    <link rel="stylesheet" href="dashboard-styles.css?v=20">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <!-- Dashboard Sidebar -->
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-car"></i> RentMyCar</h2>
+            <p>Owner Dashboard</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#overview" class="nav-item active">
+                <i class="fas fa-chart-line"></i>
+                <span>Overview</span>
+            </a>
+            <a href="#fleet" class="nav-item">
+                <i class="fas fa-cars"></i>
+                <span>Fleet Manager</span>
+            </a>
+            <a href="#bookings" class="nav-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Bookings</span>
+            </a>
+            <a href="#earnings" class="nav-item">
+                <i class="fas fa-dollar-sign"></i>
+                <span>Earnings</span>
+            </a>
+            <a href="#analytics" class="nav-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="#ai-insights" class="nav-item">
+                <i class="fas fa-brain"></i>
+                <span>AI Insights</span>
+            </a>
+            <a href="#maintenance" class="nav-item">
+                <i class="fas fa-tools"></i>
+                <span>Maintenance</span>
+            </a>
+            <a href="#reviews" class="nav-item">
+                <i class="fas fa-star"></i>
+                <span>Reviews</span>
+            </a>
+            <a href="#settings" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <img src="https://via.placeholder.com/40" alt="User" class="user-avatar">
+                <div>
+                    <p class="user-name">John Owner</p>
+                    <p class="user-role">Fleet Owner</p>
+                </div>
+            </div>
+            <button class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+        <!-- Top Bar -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <button class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1>Welcome back, John! 👋</h1>
+            </div>
+            
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+                
+                <button class="dark-mode-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Overview Section -->
+        <section id="overview" class="dashboard-section active">
+            <div class="section-header">
+                <h2>Dashboard Overview</h2>
+                <div class="date-filter">
+                    <button class="filter-btn active">Today</button>
+                    <button class="filter-btn">Week</button>
+                    <button class="filter-btn">Month</button>
+                    <button class="filter-btn">Year</button>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Total Earnings</h3>
+                        <p class="kpi-value" data-kpi="totalEarnings">$12,450</p>
+                        <p class="kpi-change neutral">
+                            <i class="fas fa-info-circle"></i> After 5% platform fee
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Active Rentals</h3>
+                        <p class="kpi-value">8</p>
+                        <p class="kpi-change">
+                            <i class="fas fa-minus"></i> Same as yesterday
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Total Bookings</h3>
+                        <p class="kpi-value">145</p>
+                        <p class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 23% from last month
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <h3>Average Rating</h3>
+                        <p class="kpi-value">4.9</p>
+                        <p class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 0.2 from last month
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3>Revenue Trends</h3>
+                    <canvas id="revenueChart"></canvas>
+                </div>
+                
+                <div class="chart-card">
+                    <h3>Booking Heat Map</h3>
+                    <canvas id="heatmapChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-card">
+                <h3>Recent Activity</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>New Booking:</strong> Tesla Model 3 booked by Sarah M.</p>
+                            <span class="activity-time">2 minutes ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>Pending Approval:</strong> BMW X5 booking request</p>
+                            <span class="activity-time">15 minutes ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon info">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>New Review:</strong> 5-star review for Mercedes S-Class</p>
+                            <span class="activity-time">1 hour ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fleet Manager Section -->
+        <section id="fleet" class="dashboard-section">
+            <div class="section-header">
+                <h2>Fleet Manager</h2>
+                <button class="btn btn-primary" onclick="showAddVehicleModal()">
+                    <i class="fas fa-plus"></i> Add New Vehicle
+                </button>
+            </div>
+
+            <div class="fleet-grid" id="fleetGrid">
+                <div class="fleet-card" data-car-id="demo-tesla">
+                    <div class="fleet-status active">Active</div>
+                    <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400" alt="Tesla Model 3">
+                    <div class="fleet-info">
+                        <h4>Tesla Model 3</h4>
+                        <p class="fleet-details">2023 • Long Range • White</p>
+                        <div class="fleet-stats">
+                            <div class="stat">
+                                <span class="stat-label">Earnings</span>
+                                <span class="stat-value">$4,250</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Trips</span>
+                                <span class="stat-value">35</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Rating</span>
+                                <span class="stat-value">4.9</span>
+                            </div>
+                        </div>
+                        <div class="fleet-actions">
+                            <button class="btn-icon" onclick="showEditVehicleModal('demo-tesla', 'Tesla', 'Model 3', 2023, 'electric', 120, 'San Francisco, CA')" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" title="Analytics"><i class="fas fa-chart-line"></i></button>
+                            <button class="btn-icon" title="Pause Listing"><i class="fas fa-pause"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fleet-card" data-car-id="demo-bmw">
+                    <div class="fleet-status maintenance">Maintenance</div>
+                    <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=400" alt="BMW X5">
+                    <div class="fleet-info">
+                        <h4>BMW X5</h4>
+                        <p class="fleet-details">2022 • xDrive40i • Black</p>
+                        <div class="fleet-stats">
+                            <div class="stat">
+                                <span class="stat-label">Earnings</span>
+                                <span class="stat-value">$3,800</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Trips</span>
+                                <span class="stat-value">28</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Rating</span>
+                                <span class="stat-value">4.8</span>
+                            </div>
+                        </div>
+                        <div class="fleet-actions">
+                            <button class="btn-icon" onclick="showEditVehicleModal('demo-bmw', 'BMW', 'X5', 2022, 'suv', 150, 'Los Angeles, CA')" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon" title="Analytics"><i class="fas fa-chart-line"></i></button>
+                            <button class="btn-icon" title="Activate"><i class="fas fa-play"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fleet-card add-vehicle" onclick="showAddVehicleModal()" style="cursor:pointer;">
+                    <i class="fas fa-plus-circle"></i>
+                    <p>Add New Vehicle</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Insights Section -->
+        <section id="ai-insights" class="dashboard-section">
+            <div class="section-header">
+                <h2>AI-Powered Insights</h2>
+                <button class="btn btn-ai">
+                    <i class="fas fa-robot"></i> Generate Report
+                </button>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Pricing Optimization</h3>
+                    </div>
+                    <p class="insight-text">
+                        AI recommends increasing Tesla Model 3 price by $10/day on weekends. 
+                        Predicted revenue increase: <strong>+18%</strong>
+                    </p>
+                    <button class="btn btn-apply">Apply Suggestion</button>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Demand Forecast</h3>
+                    </div>
+                    <p class="insight-text">
+                        High demand expected next weekend (Oct 23-24). 
+                        Consider listing more vehicles. Occupancy forecast: <strong>95%</strong>
+                    </p>
+                    <button class="btn btn-view">View Details</button>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <i class="fas fa-wrench"></i>
+                        <h3>Maintenance Alert</h3>
+                    </div>
+                    <p class="insight-text">
+                        BMW X5 will need oil change in ~500 miles. 
+                        Schedule maintenance to avoid downtime.
+                    </p>
+                    <button class="btn btn-schedule">Schedule Now</button>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <i class="fas fa-users"></i>
+                        <h3>Customer Insights</h3>
+                    </div>
+                    <p class="insight-text">
+                        Repeat customers prefer your Tesla Model 3. 
+                        Consider offering loyalty discount: <strong>10% off</strong>
+                    </p>
+                    <button class="btn btn-create">Create Offer</button>
+                </div>
+            </div>
+
+            <!-- Predictive Analytics -->
+            <div class="predictive-section">
+                <h3>30-Day Revenue Forecast</h3>
+                <div class="forecast-chart">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+                <div class="forecast-summary">
+                    <div class="forecast-item">
+                        <span>Predicted Revenue</span>
+                        <strong>$15,280</strong>
+                    </div>
+                    <div class="forecast-item">
+                        <span>Confidence Level</span>
+                        <strong>87%</strong>
+                    </div>
+                    <div class="forecast-item">
+                        <span>Recommended Actions</span>
+                        <strong>3 Available</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bookings Section -->
+        <section id="bookings" class="dashboard-section">
+            <div class="section-header">
+                <h2>Booking Requests</h2>
+                <div class="filter-tabs">
+                    <button class="filter-btn active">All</button>
+                    <button class="filter-btn">Pending</button>
+                    <button class="filter-btn">Approved</button>
+                    <button class="filter-btn">Completed</button>
+                </div>
+            </div>
+            <div class="bookings-list">
+                <div class="booking-item">
+                    <div class="booking-car">
+                        <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=100" alt="Tesla">
+                        <div>
+                            <h4>Tesla Model 3</h4>
+                            <p>Jan 15 - Jan 18, 2026</p>
+                        </div>
+                    </div>
+                    <div class="booking-renter">
+                        <strong>John Smith</strong>
+                        <p>john.smith@email.com</p>
+                        <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+                    </div>
+                    <div class="booking-message" data-message="Hi! I'm excited to rent your Tesla for a weekend road trip to the mountains. I'm a careful driver with a clean record. Looking forward to hearing from you!" style="display:none;"></div>
+                    <div class="booking-amount">$360</div>
+                    <div class="booking-status pending">Pending</div>
+                    <div class="booking-actions">
+                        <button class="btn btn-sm btn-success">Approve</button>
+                        <button class="btn btn-sm btn-outline">Decline</button>
+                        <button class="btn btn-sm btn-outline" title="View message"><i class="fas fa-envelope"></i> Message</button>
+                    </div>
+                </div>
+                <div class="booking-item">
+                    <div class="booking-car">
+                        <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=100" alt="BMW">
+                        <div>
+                            <h4>BMW X5</h4>
+                            <p>Jan 20 - Jan 22, 2026</p>
+                        </div>
+                    </div>
+                    <div class="booking-renter">
+                        <strong>Sarah Johnson</strong>
+                        <p>sarah.j@email.com</p>
+                        <span class="rating"><i class="fas fa-star"></i> 4.9</span>
+                    </div>
+                    <div class="booking-message" data-message="Hello! I need a reliable SUV for a family trip. We have 2 kids and will take great care of your car. Thank you!" style="display:none;"></div>
+                    <div class="booking-amount">$450</div>
+                    <div class="booking-status approved">Approved</div>
+                    <div class="booking-actions">
+                        <button class="btn btn-sm btn-outline"><i class="fas fa-envelope"></i> Message</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Earnings Section -->
+        <section id="earnings" class="dashboard-section">
+            <div class="section-header">
+                <h2>Earnings</h2>
+                <div class="date-range">
+                    <button class="filter-btn">This Week</button>
+                    <button class="filter-btn active">This Month</button>
+                    <button class="filter-btn">This Year</button>
+                </div>
+            </div>
+            <div class="earnings-summary">
+                <div class="earnings-card">
+                    <h3>Total Earnings</h3>
+                    <p class="amount">$12,450</p>
+                    <span class="trend positive">+15% from last month</span>
+                </div>
+                <div class="earnings-card">
+                    <h3>Pending Payouts</h3>
+                    <p class="amount">$1,850</p>
+                    <span>Next payout: Jan 15</span>
+                </div>
+                <div class="earnings-card">
+                    <h3>Average Per Trip</h3>
+                    <p class="amount">$285</p>
+                    <span class="trend positive">+8% from last month</span>
+                </div>
+            </div>
+            <div class="earnings-history">
+                <h3>Recent Transactions</h3>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Vehicle</th>
+                            <th>Renter</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Jan 10, 2026</td>
+                            <td>Tesla Model 3</td>
+                            <td>Mike R.</td>
+                            <td>$360</td>
+                            <td><span class="status-badge paid">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 8, 2026</td>
+                            <td>BMW X5</td>
+                            <td>Lisa K.</td>
+                            <td>$450</td>
+                            <td><span class="status-badge paid">Paid</span></td>
+                        </tr>
+                        <tr>
+                            <td>Jan 5, 2026</td>
+                            <td>Tesla Model 3</td>
+                            <td>Tom H.</td>
+                            <td>$240</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="dashboard-section">
+            <div class="section-header">
+                <h2>Analytics</h2>
+                <button class="btn btn-outline"><i class="fas fa-download"></i> Export Report</button>
+            </div>
+            <div class="analytics-grid">
+                <div class="chart-card">
+                    <h3>Booking Trends</h3>
+                    <canvas id="bookingTrendsChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Revenue by Vehicle</h3>
+                    <canvas id="revenueByVehicleChart"></canvas>
+                </div>
+            </div>
+            <div class="analytics-stats">
+                <div class="stat-box">
+                    <h4>Total Trips</h4>
+                    <p>145</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Avg. Trip Duration</h4>
+                    <p>3.2 days</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Utilization Rate</h4>
+                    <p>78%</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Repeat Customers</h4>
+                    <p>34%</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance Section -->
+        <section id="maintenance" class="dashboard-section">
+            <div class="section-header">
+                <h2>Maintenance Schedule</h2>
+                <button class="btn btn-primary" onclick="showAddMaintenanceModal()"><i class="fas fa-plus"></i> Add Service</button>
+            </div>
+            <div class="maintenance-list">
+                <div class="maintenance-item" onclick="showMaintenanceDetails('bmw-oil')" style="cursor:pointer;">
+                    <div class="vehicle-info">
+                        <img src="https://images.unsplash.com/photo-1555215858-9dc847c0cd01?w=80" alt="BMW">
+                        <div>
+                            <h4>BMW X5</h4>
+                            <p>Oil Change</p>
+                        </div>
+                    </div>
+                    <div class="maintenance-date">
+                        <i class="fas fa-calendar"></i> Due: Jan 20, 2026
+                    </div>
+                    <div class="maintenance-status warning">Due Soon</div>
+                    <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); scheduleService('bmw-oil')">Schedule</button>
+                </div>
+                <div class="maintenance-item" onclick="showMaintenanceDetails('tesla-tires')" style="cursor:pointer;">
+                    <div class="vehicle-info">
+                        <img src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=80" alt="Tesla">
+                        <div>
+                            <h4>Tesla Model 3</h4>
+                            <p>Tire Rotation</p>
+                        </div>
+                    </div>
+                    <div class="maintenance-date">
+                        <i class="fas fa-calendar"></i> Due: Feb 5, 2026
+                    </div>
+                    <div class="maintenance-status ok">Scheduled</div>
+                    <button class="btn btn-sm btn-outline" onclick="event.stopPropagation(); viewService('tesla-tires')">View</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviews" class="dashboard-section">
+            <div class="section-header">
+                <h2>Reviews</h2>
+                <div class="overall-rating">
+                    <span class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+                    <span>4.9 average (127 reviews)</span>
+                </div>
+            </div>
+            <div class="reviews-list">
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="https://ui-avatars.com/api/?name=John+S&background=6366f1&color=fff" alt="John">
+                        <div>
+                            <h4>John S.</h4>
+                            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        </div>
+                        <span class="review-date">Jan 10, 2026</span>
+                    </div>
+                    <p class="review-text">"Amazing experience! The Tesla was in perfect condition and the pickup was super easy. Will definitely rent again!"</p>
+                    <span class="review-vehicle">Tesla Model 3</span>
+                </div>
+                <div class="review-item">
+                    <div class="review-header">
+                        <img src="https://ui-avatars.com/api/?name=Sarah+M&background=10b981&color=fff" alt="Sarah">
+                        <div>
+                            <h4>Sarah M.</h4>
+                            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                        </div>
+                        <span class="review-date">Jan 8, 2026</span>
+                    </div>
+                    <p class="review-text">"Great communication and flexible with pickup time. The BMW was clean and drove beautifully."</p>
+                    <span class="review-vehicle">BMW X5</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="dashboard-section">
+            <div class="section-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3><i class="fas fa-user"></i> Profile Settings</h3>
+                    <div class="form-group">
+                        <label>Display Name</label>
+                        <input type="text" value="Demo Owner" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="demo@rentmycar.com" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" value="(555) 123-4567" class="form-control">
+                    </div>
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-bell"></i> Notifications</h3>
+                    <div class="toggle-setting">
+                        <span>Email notifications</span>
+                        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+                    <div class="toggle-setting">
+                        <span>SMS notifications</span>
+                        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+                    <div class="toggle-setting">
+                        <span>Booking alerts</span>
+                        <label class="toggle"><input type="checkbox" checked><span class="slider"></span></label>
+                    </div>
+                    <div class="toggle-setting">
+                        <span>Marketing emails</span>
+                        <label class="toggle"><input type="checkbox"><span class="slider"></span></label>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <h3><i class="fas fa-credit-card"></i> Payment Settings</h3>
+                    <p>Connected Account: ****4242</p>
+                    <button class="btn btn-outline">Update Payment Method</button>
+                    <button class="btn btn-outline">View Payout History</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Smart Notifications Panel -->
+        <div class="notifications-panel">
+            <div class="panel-header">
+                <h3>Smart Notifications</h3>
+                <button class="close-panel">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="notification-list">
+                <div class="notification-item urgent">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <h4>Urgent: Booking Conflict</h4>
+                        <p>Two overlapping bookings for Tesla Model 3</p>
+                        <button class="btn-resolve">Resolve Now</button>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <div>
+                        <h4>Payment Received</h4>
+                        <p>$450 from yesterday's rental</p>
+                    </div>
+                </div>
+                
+                <div class="notification-item">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <h4>New 5-Star Review</h4>
+                        <p>"Amazing experience with the Tesla!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation for Dashboard -->
+    <nav class="mobile-nav dashboard-mobile-nav">
+        <div class="mobile-nav-items">
+            <a href="#overview" class="mobile-nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Overview</span>
+            </a>
+            <a href="#fleet" class="mobile-nav-item">
+                <i class="fas fa-car"></i>
+                <span>Fleet</span>
+            </a>
+            <a href="#bookings" class="mobile-nav-item">
+                <i class="fas fa-calendar"></i>
+                <span>Bookings</span>
+            </a>
+            <a href="#earnings" class="mobile-nav-item">
+                <i class="fas fa-dollar-sign"></i>
+                <span>Earnings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="src/utils/sanitize.js?v=1"></script>
+    <script src="config.js?v=21"></script>
+    <script src="api.js?v=21"></script>
+    <script src="auth-new.js?v=21"></script>
+    <script src="dashboard.js?v=24"></script>
+    <script src="mobile.js?v=21"></script>
+</body>
+</html>

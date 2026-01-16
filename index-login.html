@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#3b82f6">
+    <title>CarShare Pro - Login</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #1f2937;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        /* Container */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            max-width: 440px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            padding: 30px 0 20px;
+            animation: fadeInDown 0.6s ease;
+        }
+        
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .app-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tagline {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            animation: slideUp 0.6s ease 0.2s both;
+        }
+        
+        .form-header {
+            margin-bottom: 28px;
+        }
+        
+        .form-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .form-subtitle {
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        /* Input Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        
+        .input-field::placeholder {
+            color: #9ca3af;
+        }
+        
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+        }
+        
+        .password-toggle:hover {
+            color: #3b82f6;
+        }
+        
+        /* Form Options */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+        }
+        
+        .checkbox-label {
+            font-size: 14px;
+            color: #4b5563;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .forgot-link {
+            font-size: 14px;
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .forgot-link:hover {
+            color: #2563eb;
+        }
+        
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+        }
+        
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        
+        .divider-text {
+            padding: 0 16px;
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Social Buttons */
+        .social-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .social-btn {
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #374151;
+        }
+        
+        .social-btn:hover {
+            background: #f9fafb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .social-icon {
+            font-size: 18px;
+        }
+        
+        .google-icon {
+            color: #ea4335;
+        }
+        
+        .facebook-icon {
+            color: #1877f2;
+        }
+        
+        /* Sign Up Link */
+        .signup-section {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            animation: fadeIn 0.6s ease 0.4s both;
+        }
+        
+        .signup-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .signup-link {
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .signup-link:hover {
+            opacity: 0.8;
+        }
+        
+        /* Demo Info */
+        .demo-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            animation: fadeIn 0.6s ease 0.3s both;
+        }
+        
+        .demo-credentials {
+            font-weight: 600;
+            font-family: monospace;
+            margin-top: 4px;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        /* Success Message */
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: none;
+            animation: slideUp 0.4s ease;
+            font-weight: 500;
+        }
+        
+        /* Error Message */
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            display: none;
+            animation: shake 0.5s ease;
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+                font-size: 40px;
+            }
+            
+            .app-title {
+                font-size: 28px;
+            }
+            
+            .form-card {
+                padding: 24px 20px;
+            }
+            
+            .form-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+            <div class="logo">🚗</div>
+            <h1 class="app-title">CarShare Pro</h1>
+            <p class="tagline">Your ride, your way</p>
+        </div>
+        
+        <!-- Demo Info -->
+        <div class="demo-info">
+            Demo Mode: Use credentials below
+            <div class="demo-credentials">demo@carshare.com / demo123</div>
+        </div>
+        
+        <!-- Form Card -->
+        <div class="form-card">
+            <div class="form-header">
+                <h2 class="form-title">Welcome Back!</h2>
+                <p class="form-subtitle">Sign in to access your account</p>
+            </div>
+            
+            <!-- Success Message -->
+            <div class="success-message" id="successMsg">
+                ✓ Login successful! Redirecting...
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message" id="errorMsg">
+                Invalid email or password. Please try again.
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label class="input-label" for="email">Email</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            class="input-field" 
+                            placeholder="Enter your email"
+                            value="demo@carshare.com"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label class="input-label" for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            class="input-field" 
+                            placeholder="Enter your password"
+                            value="demo123"
+                            required
+                        >
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Form Options -->
+                <div class="form-options">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remember" class="checkbox" checked>
+                        <label for="remember" class="checkbox-label">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">Sign In</span>
+                </button>
+                
+                <!-- Divider -->
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <span class="divider-text">or</span>
+                    <div class="divider-line"></div>
+                </div>
+                
+                <!-- Social Buttons -->
+                <div class="social-buttons">
+                    <button type="button" class="social-btn" onclick="socialLogin('google')">
+                        <span class="social-icon google-icon">G</span>
+                        Continue with Google
+                    </button>
+                    <button type="button" class="social-btn" onclick="socialLogin('facebook')">
+                        <span class="social-icon facebook-icon">f</span>
+                        Continue with Facebook
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Sign Up Link -->
+        <div class="signup-section">
+            <p class="signup-text">
+                Don't have an account? 
+                <a href="#" class="signup-link" onclick="goToSignup()">Sign Up</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const errorMsg = document.getElementById('errorMsg');
+            const successMsg = document.getElementById('successMsg');
+            
+            // Hide messages
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+            
+            // Show loading
+            submitBtn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> Signing in...';
+            
+            // Simulate login
+            setTimeout(() => {
+                if (email === 'demo@carshare.com' && password === 'demo123') {
+                    // Success
+                    successMsg.style.display = 'block';
+                    localStorage.setItem('carshare_auth', 'demo_' + Date.now());
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'dashboard-simple.html';
+                    }, 1500);
+                } else {
+                    // Error
+                    submitBtn.disabled = false;
+                    btnText.textContent = 'Sign In';
+                    errorMsg.style.display = 'block';
+                }
+            }, 1500);
+        }
+        
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggle = event.target;
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                passwordField.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+        
+        function socialLogin(provider) {
+            alert(`${provider} login will be available soon!`);
+        }
+        
+        function goToSignup() {
+            alert('Sign up page coming soon! Use demo credentials for now.');
+        }
+    </script>
+</body>
+</html>

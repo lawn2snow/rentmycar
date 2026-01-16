@@ -1,0 +1,13 @@
+# RentMyCar Robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://rentmycar-demo.netlify.app/sitemap.xml
+
+# Disallow admin and dashboard for search engines
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /renter-dashboard.html
+Disallow: /.netlify/

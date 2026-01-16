@@ -1,0 +1,101 @@
+{
+  "name": "RentMyCar - P2P Car Rental",
+  "short_name": "RentMyCar",
+  "description": "Peer-to-peer car rental platform. Rent cars from local owners or list your car to earn money.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/72/6366f1/ffffff?text=RC",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/96/6366f1/ffffff?text=RC",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/128/6366f1/ffffff?text=RC",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/144/6366f1/ffffff?text=RC",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/152/6366f1/ffffff?text=RC",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/192/6366f1/ffffff?text=RC",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/384/6366f1/ffffff?text=RC",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://via.placeholder.com/512/6366f1/ffffff?text=RC",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["transportation", "lifestyle", "business"],
+  "screenshots": [
+    {
+      "src": "https://via.placeholder.com/540x720/6366f1/ffffff?text=RentMyCar",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "https://via.placeholder.com/1024x768/6366f1/ffffff?text=RentMyCar",
+      "sizes": "1024x768",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Cars",
+      "short_name": "Browse",
+      "description": "Browse available cars near you",
+      "url": "/index.html#browse",
+      "icons": [{"src": "https://via.placeholder.com/96/6366f1/ffffff?text=B", "sizes": "96x96"}]
+    },
+    {
+      "name": "My Bookings",
+      "short_name": "Bookings",
+      "description": "View your rental bookings",
+      "url": "/renter-dashboard.html",
+      "icons": [{"src": "https://via.placeholder.com/96/6366f1/ffffff?text=BK", "sizes": "96x96"}]
+    },
+    {
+      "name": "List My Car",
+      "short_name": "List Car",
+      "description": "List your car for rent",
+      "url": "/dashboard.html",
+      "icons": [{"src": "https://via.placeholder.com/96/6366f1/ffffff?text=LC", "sizes": "96x96"}]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
