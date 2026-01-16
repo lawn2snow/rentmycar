@@ -22,7 +22,13 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { email, password, rememberMe } = JSON.parse(event.body || '{}');
+    // Handle base64 encoded body
+    let bodyData = event.body || '{}';
+    if (event.isBase64Encoded) {
+      bodyData = Buffer.from(bodyData, 'base64').toString('utf-8');
+    }
+
+    const { email, password, rememberMe } = JSON.parse(bodyData);
 
     // Validate input
     if (!email || !password) {

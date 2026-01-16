@@ -22,6 +22,12 @@ exports.handler = async (event) => {
   }
 
   try {
+    // Handle base64 encoded body
+    let bodyData = event.body || '{}';
+    if (event.isBase64Encoded) {
+      bodyData = Buffer.from(bodyData, 'base64').toString('utf-8');
+    }
+
     const {
       email,
       password,
@@ -30,7 +36,7 @@ exports.handler = async (event) => {
       phone,
       role,
       businessName
-    } = JSON.parse(event.body || '{}');
+    } = JSON.parse(bodyData);
 
     // Validate required fields
     if (!email || !password || !firstName || !lastName) {
@@ -61,11 +67,20 @@ exports.handler = async (event) => {
     }
 
     // Check if email already exists
-    const { data: existingUser } = await supabase
+    const { data: existingUser, error: checkError } = await supabase
       .from('users')
       .select('id')
       .eq('email', email.toLowerCase())
       .single();
+
+    if (checkError && checkError.code !== 'PGRST116') {
+      // PGRST116 = no rows found, which is what we want
+      return jsonResponse(500, {
+        success: false,
+        error: 'Database error checking email',
+        details: checkError.message
+      });
+    }
 
     if (existingUser) {
       return jsonResponse(409, { success: false, error: 'Email already registered' });
