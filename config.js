@@ -112,7 +112,7 @@ if (CONFIG.IS_PRODUCTION) {
     console.error('CONFIG ERROR: SUPABASE_URL is not configured');
   }
   if (!CONFIG.STRIPE_PUBLISHABLE_KEY) {
-    console.error('CONFIG ERROR: STRIPE_PUBLISHABLE_KEY is not configured');
+    console.warn('CONFIG: Stripe payments not configured - payment features disabled');
   }
 }
 
