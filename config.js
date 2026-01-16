@@ -121,10 +121,31 @@ if (CONFIG.IS_PRODUCTION) {
 }
 
 // Initialize Supabase client for frontend auth (Google OAuth, etc.)
-let supabaseClient = null;
-if (typeof window !== 'undefined' && typeof supabase !== 'undefined') {
-  supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+// The Supabase CDN v2 exposes createClient directly on the supabase object
+function initializeSupabaseClient() {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    // The CDN exposes: supabase.createClient
+    if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
+      const client = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+      console.log('Supabase client initialized');
+      return client;
+    }
+  } catch (e) {
+    console.error('Supabase init error:', e);
+  }
+  return null;
 }
 
-// Export supabase client
-window.supabaseClient = supabaseClient;
+// Try to initialize immediately
+window.supabaseClient = initializeSupabaseClient();
+
+// Also try after DOM loads in case script wasn't ready
+if (!window.supabaseClient) {
+  document.addEventListener('DOMContentLoaded', function() {
+    if (!window.supabaseClient) {
+      window.supabaseClient = initializeSupabaseClient();
+    }
+  });
+}

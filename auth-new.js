@@ -407,8 +407,18 @@ function showToast(message, type = 'info') {
 
 // Social authentication with Supabase
 async function socialAuth(provider) {
-    if (!window.supabaseClient) {
-        showToast('Authentication service not available', 'error');
+    // Try to get or initialize supabase client
+    let client = window.supabaseClient;
+
+    // If client not available, try to initialize it
+    if (!client && typeof initializeSupabaseClient === 'function') {
+        client = initializeSupabaseClient();
+        window.supabaseClient = client;
+    }
+
+    if (!client) {
+        console.error('Supabase client not available. supabase object:', typeof supabase);
+        showToast('Authentication service not available. Please refresh the page.', 'error');
         return;
     }
 
@@ -420,20 +430,20 @@ async function socialAuth(provider) {
     try {
         showToast('Redirecting to Google...', 'info');
 
-        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+        const { data, error } = await client.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin + '/?auth=callback'
+                redirectTo: window.location.origin
             }
         });
 
         if (error) {
             console.error('Google auth error:', error);
-            showToast('Failed to connect to Google', 'error');
+            showToast('Failed to connect to Google: ' + error.message, 'error');
         }
     } catch (err) {
         console.error('Social auth error:', err);
-        showToast('Authentication failed', 'error');
+        showToast('Authentication failed: ' + err.message, 'error');
     }
 }
 
